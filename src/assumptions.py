@@ -21,24 +21,25 @@ def get_assumptions() -> dict:
         "operating_days_per_year": 350,   # ~15 days/yr reserved for maintenance
         "annual_degradation": 0.02,       # usable-capacity fade per year
 
-        # --- Financial spec ---            # TODO: replace with real quotes
+        # --- Financial spec ---
+        # capex ~ $300/kWh, mid-range for a 2024 4-hour utility Li-ion BESS
+        # (BNEF Battery Cost Survey); replace with a vendor quote when available.
         "capex_per_kwh_krw": 400_000,     # turnkey installed cost per kWh
         "om_pct_of_capex_per_year": 0.02, # fixed O&M as a share of capex
         "discount_rate": 0.07,            # WACC / hurdle rate
         "project_life_years": 15,
 
-        # --- Solar growth scenario (this is what reshapes the price curve) ---
+        # --- Solar growth scenario (this reshapes the price curve) ---
         "solar_growth_pct": 0.30,         # assumed % increase in solar generation
 
-        # --- Hour-of-day solar elasticities on log(SMP) ---
-        # These come from the working-paper regression: log(SMP) on log(Solar).
-        # A value of -0.0058 means "+1% solar -> -0.58% SMP" at that hour.
-        # Anchors are YOUR hour-specific estimates; every other hour falls back
-        # to the IV average. NOTE: the +0.0496 sign at hour 13 contradicts the
-        # usual "solar depresses midday price" intuition -- verify it against
-        # the regression output before drawing business conclusions.
-        "elasticity_iv_average": -0.0058,
-        "elasticity_anchors": {13: 0.0496, 24: -0.0748},
+        # --- Elasticity context (the hourly vector lives in data/elasticities.csv) ---
+        # From the working paper: IV regression of log(SMP) on log(Solar).
+        # -0.0058 means "+1% solar -> -0.58% SMP" on the national average.
+        "elasticity_iv_average": -0.0058,      # national mainland, Phase 1 main spec
+        "elasticity_zonal_yeongnam": -0.0135,  # Yeongnam, Phase 2B (~2.3x stronger)
+        # Hours below this solar generation (MWh) are treated as non-solar: their
+        # IV coefficients are weakly identified and zeroed in the conservative run.
+        "solar_active_threshold_mwh": 50,
     }
 
     # Derived quantities: never hand-type a number you can compute from others.

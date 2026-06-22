@@ -20,20 +20,17 @@ def load_baseline_smp(csv_path: str) -> pd.Series:
     return df.set_index("hour")["smp_krw_per_kwh"]
 
 
-def build_hourly_elasticities(anchors: dict, default: float,
-                              hours: pd.Index) -> pd.Series:
-    """Full 24-hour elasticity vector: anchors where known, default elsewhere."""
-    elasticities = pd.Series(default, index=hours, name="elasticity")
-    for hour, value in anchors.items():
-        elasticities.loc[hour] = value
-    return elasticities
+def load_solar_profile(csv_path: str) -> pd.Series:
+    """Return hour-of-day mean solar generation (MWh), indexed 1..24."""
+    df = pd.read_csv(csv_path)
+    return df.set_index("hour")["solar_mwh"]
 
 
 def load_elasticities(csv_path: str) -> pd.Series:
-    """Load a full 24-hour elasticity vector from CSV (hour, elasticity).
+    """Load the 24-hour log(SMP)~log(Solar) IV coefficient vector (hour, elasticity).
 
-    This is the interface for *real* regression output: replace the values in
-    data/elasticities.csv with your estimated hour-of-day coefficients.
+    Built from the working paper's hourly HTE estimates by
+    scripts/build_inputs_from_panel.py.
     """
     df = pd.read_csv(csv_path)
     return df.set_index("hour")["elasticity"]

@@ -6,27 +6,27 @@ memorize. The goal is to sound like I built it and interrogated it, because I di
 ---
 
 ## One sentence
-"I turned my paper's estimate of how solar affects electricity prices into an
-NPV model for a 100MW battery, and found that arbitrage alone doesn't pay for it."
+"I turned my paper's own 2024 data and causal estimates into an NPV model for a
+100MW battery, and found that arbitrage alone doesn't pay for it — robustly."
 
 ---
 
 ## 90-second version
-> My undergraduate research used an instrumental-variables design to estimate the
-> causal effect of solar generation on Korea's wholesale electricity price, the
-> SMP. That result is an *elasticity*, so I wanted to translate it into a real
-> business decision. I built a Python model where a percentage increase in solar
-> reshapes the 24-hour price curve through each hour's elasticity. A 100MW / 4h
-> battery then charges in the cheapest hours and discharges in the most expensive
-> ones, and that price spread is the revenue. I extended the daily profit into
-> annual cash flows with capex, O&M, and battery degradation, and computed NPV
-> and IRR.
+> My undergraduate research used an instrumental-variables design to estimate how
+> solar generation moves Korea's wholesale price, the SMP. For the business side I
+> built the battery model on the *same 2024 panel*, and two things jumped out.
+> First, Korea has no California-style midday price dip yet — the cheapest hours
+> are pre-dawn, when solar is zero — so the battery charges at 3am and discharges
+> into the expensive daytime. Second, my hourly estimates show solar slightly
+> *raises* daytime prices, an intraday-absorption pattern, so more solar actually
+> nudges arbitrage revenue up here, opposite to the textbook story.
 >
-> The interesting part: on energy arbitrage alone the NPV is negative. That's not
-> a failure — it quantifies an industry reality, that batteries need to stack
-> capacity and ancillary-service revenue on top of arbitrage. I also flagged that
-> one of my hourly coefficients has a counter-intuitive sign, so I treated the
-> numbers skeptically rather than just plugging them in.
+> But on arbitrage alone the NPV is about −1,600억 won and never recovers the
+> capex. The striking part is the robustness: across every elasticity scenario —
+> the contested sign, the regional estimate, a flat average — NPV moves less than
+> 2%. So the econometric debate is real for the paper but immaterial to the
+> investment; capex is what dominates. To break even, capex would have to fall
+> ~6x or the project would need ancillary and capacity revenue stacked on top.
 
 ## 3-minute version (structure)
 1. **Context (30s)** — the paper, the IV strategy, the elasticity result (~−0.6%
@@ -59,23 +59,24 @@ into the cash-flow and NPV calc.
 **"The NPV is negative — so it's a bad project?"**
 On *energy arbitrage alone*, yes — and that matches reality: utility batteries
 rarely pencil out on arbitrage by itself. I quantified the gap with closed-form
-break-even levers: capex would need to fall ~5x (to ~78,000 KRW/kWh), or daily
-arbitrage be ~5x larger, or ~167,000 KRW/kW-yr of stacked capacity/ancillary
+break-even levers: capex would need to fall ~6x (to ~63,000 KRW/kWh), or daily
+arbitrage be ~6x larger, or ~175,000 KRW/kW-yr of stacked capacity/ancillary
 revenue. So the project isn't "bad" — it's "arbitrage-only is insufficient, and
 here's exactly how much more is needed."
 
-**"How sensitive is the conclusion to that contested hour-13 coefficient?"**
-I ran it three ways — as-estimated, with the sign flipped, and with a uniform
-average elasticity — and NPV moved less than 0.5%. So the contested sign is an
-important academic question but immaterial to the investment call; capex and the
-overall spread dominate. I like that the model lets me *say that with a number*
-rather than hand-wave.
+**"How sensitive is the conclusion to your contested hourly coefficients?"**
+I ran four elasticity scenarios — the national HTE, a conservative version that
+zeros the weakly-identified night hours, the stronger Yeongnam regional estimate,
+and a flat average — and NPV stays within ~2%. So the econometric debate is an
+important academic question but immaterial to the investment call; capex
+dominates. I like that the model lets me *say that with a number*.
 
 **"Your 1pm elasticity is positive — doesn't solar lower midday prices?"**
-That's exactly the sign I'm skeptical of. It may be an artifact of the omitted
-base hour in the interaction, a demand-control issue, or a definitional one. I
-didn't want to build a business case on a coefficient I couldn't defend, so I
-flagged it as something to reconcile against the regression before trusting it.
+In Korea's single-price market it doesn't, yet — that positive daytime effect is
+my paper's "intraday absorption" finding, and the raw 2024 data backs it: midday
+is part of an expensive plateau, not a dip. It's still a contested result, which
+is why I treat it carefully. But the key point for the business case is that I
+*tested* whether it matters: flipping or removing it changes NPV by under 2%.
 
 **"Biggest simplification?"**
 Perfect-foresight dispatch — I assume the day's prices are known and ignore
