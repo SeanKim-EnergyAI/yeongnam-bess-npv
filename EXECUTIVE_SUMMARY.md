@@ -26,6 +26,7 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
 2. Dispatch: charge the cheapest 4 h, discharge the dearest 4 h (efficiency-adjusted)
 3. Annual cash flows (capex, O&M, degradation) → NPV / IRR
 4. Closed-form break-even + 4-scenario elasticity robustness + sensitivities
+5. **LP optimization** of dispatch (PuLP) under power, capacity, state-of-charge, and cycle constraints
 
 ## Key findings
 1. **No Korean "duck curve" yet** — the cheapest hours are pre-dawn (03–05h), not
@@ -37,16 +38,20 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
    investment; **capex dominates.**
 4. Break-even needs capex ~7x lower or ~211,000 KRW/kW-yr of stacked
    capacity/ancillary revenue.
+5. An **LP dispatch optimizer** shows the heuristic *overstates* revenue ~8% by
+   ignoring the charging power limit; the feasible optimum confirms the result.
 
 ## Figures
-`outputs/price_curve.png` (SMP, solar, dispatch) · `outputs/cashflows.png` (annual cash flow)
+`outputs/price_curve.png` (SMP, solar, dispatch) · `outputs/cashflows.png`
+(annual cash flow) · `outputs/lp_dispatch.png` (LP-optimal schedule)
 
 ## Limitations
-Heuristic perfect-foresight dispatch (not optimized); single national price;
-capex is literature-based; the positive daytime elasticity is the paper's own
-contested result, so the *mechanism* is treated as tentative (the *robustness* is not).
+Dispatch assumes perfect foresight of prices (both the heuristic and the LP);
+single national price; capex is literature-based; the positive daytime elasticity
+is the paper's own contested result, so the *mechanism* is treated as tentative
+(the *robustness* is not).
 
 ## Future work
-- **LP optimization** of dispatch with state-of-charge and power constraints (formalizes the heuristic).
 - Revenue stacking (capacity / ancillary) and PPA structures.
 - Yeongnam-specific hourly elasticities.
+- Multi-day / seasonal dispatch and price-forecast uncertainty (replace perfect foresight).

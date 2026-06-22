@@ -65,6 +65,20 @@ All within ~2%. **The contested sign matters for the paper, not for the business
 call** — capex dominates. Even at 150,000 KRW/kWh (~$110/kWh, below market) NPV
 is still −410억.
 
+## Phase 4 — LP-optimal dispatch
+
+`run_phase4.py` replaces the heuristic with a linear program that maximizes daily
+arbitrage subject to real battery physics (power limit, energy capacity,
+state-of-charge balance with round-trip efficiency, daily cycle cap).
+
+![LP-optimal dispatch](outputs/lp_dispatch.png)
+
+The LP optimum is **~8% below** the heuristic — because the heuristic implicitly
+buys a full cycle's charging energy in 4 hours, which violates the power limit.
+The LP charges over ~5 pre-dawn hours and stops discharging once the marginal
+charge hour costs more than the discharge. It is the physically feasible optimum,
+and it leaves the negative-NPV conclusion intact.
+
 ## How it works
 
 ```
@@ -87,13 +101,16 @@ scenario_SMP[h] = baseline_SMP[h] * (1 + solar_growth) ** elasticity[h]
 | `src/cashflow.py`       | Capex, O&M, degradation -> annual cash flows |
 | `src/valuation.py`      | NPV, IRR, payback |
 | `src/breakeven.py`      | Closed-form break-even capex / arbitrage / stacking |
+| `src/optimize_dispatch.py` | LP: optimal charge/discharge under battery physics |
 | `run_phase3.py`         | Orchestrate: summary, break-even, robustness, plots |
+| `run_phase4.py`         | LP dispatch optimization vs the heuristic |
 
 ## Run
 
 ```bash
 pip install -r requirements.txt
-python3 run_phase3.py                       # uses the committed real-data inputs
+python3 run_phase3.py                       # NPV, break-even, robustness, sensitivities
+python3 run_phase4.py                       # LP-optimal dispatch vs the heuristic
 ```
 
 To regenerate the inputs from the raw research files:

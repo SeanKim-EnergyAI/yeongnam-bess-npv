@@ -79,9 +79,22 @@ is why I treat it carefully. But the key point for the business case is that I
 *tested* whether it matters: flipping or removing it changes NPV by under 2%.
 
 **"Biggest simplification?"**
-Perfect-foresight dispatch — I assume the day's prices are known and ignore
-state-of-charge and ramping constraints beyond the duration. It gives an upper
-bound on arbitrage value, which is the right direction for a go/no-go screen.
+Perfect foresight — both the heuristic and the LP assume the day's prices are
+known in advance; I don't model forecast error. The LP *does* enforce
+state-of-charge and power limits, which actually revealed that my heuristic was
+over-optimistic. Real dispatch would run on a price forecast, which can only
+lower captured value — fine for a go/no-go screen.
+
+**"Walk me through the optimization model."**
+It's a linear program over a representative day. The decision variables are
+hourly charge, discharge, and state of charge; the objective maximizes
+Σ price·(discharge − charge). Constraints: power limits on charge and discharge,
+capacity on state of charge, an SOC-balance equation with round-trip efficiency
+linking the hours, start and end empty, and a one-cycle-per-day throughput cap —
+solved with PuLP/CBC. The telling result: the LP came in ~8% *below* my
+heuristic, which exposed that the heuristic was buying a full cycle's energy in
+four hours, over the power limit. So the LP both tightened the model and removed
+an optimistic bias.
 
 **"What would you do with more time?"**
 Plug in real KPX 2024 prices and vendor capex, add a revenue-stacking layer,
