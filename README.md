@@ -33,8 +33,8 @@ effect is second-order.
 | Dispatch | charge 03–06h (~98), discharge daytime peak (~141) |
 | Arbitrage spread | ~42 KRW/kWh |
 | Daily net revenue | ~0.11억 KRW |
-| Capex | ~1,600억 KRW |
-| **NPV @ 7%** | **≈ −1,592억 KRW** |
+| Capex | ~1,880억 KRW (~$350/kWh) |
+| **NPV @ 7%** | **≈ −1,923억 KRW** |
 | IRR | undefined (cash flows never recover capex) |
 
 **Energy arbitrage alone does not justify the capex** — a robust, defensible
@@ -45,9 +45,9 @@ would close it.
 
 | Lever | Required | vs. now |
 |---|---|---|
-| Capex | ~63,000 KRW/kWh | ~6x below market (~400,000) |
-| Daily arbitrage | ~6.3x larger | spread far beyond the data |
-| Stacked revenue | ~175,000 KRW/kW-yr | capacity / ancillary on top |
+| Capex | ~63,000 KRW/kWh | ~7x below market (~470,000) |
+| Daily arbitrage | ~7.4x larger | spread far beyond the data |
+| Stacked revenue | ~211,000 KRW/kW-yr | capacity / ancillary on top |
 
 ## Robustness: the econometric debate is immaterial to the investment
 
@@ -56,14 +56,14 @@ positive, against intuition). The model quantifies how much that matters:
 
 | Elasticity scenario | NPV |
 |---|---|
-| as-estimated (national HTE) | −1,592억 |
-| solar-hours only (night = 0) | −1,595억 |
-| Yeongnam intensity (×2.3)    | −1,574억 |
-| flat IV average (−0.0058)    | −1,605억 |
+| as-estimated (national HTE) | −1,923억 |
+| solar-hours only (night = 0) | −1,926억 |
+| Yeongnam intensity (×2.3)    | −1,905억 |
+| flat IV average (−0.0058)    | −1,936억 |
 
 All within ~2%. **The contested sign matters for the paper, not for the business
-call** — capex dominates. Even halving capex to 150,000 KRW/kWh leaves NPV at
-−410억.
+call** — capex dominates. Even at 150,000 KRW/kWh (~$110/kWh, below market) NPV
+is still −410억.
 
 ## How it works
 
@@ -112,8 +112,9 @@ python3 scripts/build_inputs_from_panel.py \
 | `data/elasticities.csv` | Hourly log(SMP)~log(Solar) IV coefficients (Phase 2 HTE) |
 
 Only these small aggregates live here; the raw panel stays in the research repo.
-The one remaining placeholder is battery capex (~$300/kWh, BNEF range) in
-`assumptions.py` — and the break-even table shows the conclusion holds across it.
+The one literature-based input is battery capex (~$350/kWh, NREL ATB 2024 /
+Lazard LCOS midpoint) in `assumptions.py` — and the break-even table shows the
+conclusion holds across the full $300–400/kWh range.
 
 ## Context
 

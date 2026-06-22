@@ -22,9 +22,11 @@ def get_assumptions() -> dict:
         "annual_degradation": 0.02,       # usable-capacity fade per year
 
         # --- Financial spec ---
-        # capex ~ $300/kWh, mid-range for a 2024 4-hour utility Li-ion BESS
-        # (BNEF Battery Cost Survey); replace with a vendor quote when available.
-        "capex_per_kwh_krw": 400_000,     # turnkey installed cost per kWh
+        # Battery capex: a 4-hour utility-scale Li-ion system runs ~$300-400/kWh
+        # installed in 2024 (NREL ATB 2024; Lazard LCOS v9). Midpoint ~$350/kWh
+        # at ~1,350 KRW/USD ~= 470,000 KRW/kWh. The break-even table shows the
+        # negative-NPV conclusion holds across this whole range.
+        "capex_per_kwh_krw": 470_000,     # installed cost per kWh (sourced midpoint)
         "om_pct_of_capex_per_year": 0.02, # fixed O&M as a share of capex
         "discount_rate": 0.07,            # WACC / hurdle rate
         "project_life_years": 15,
