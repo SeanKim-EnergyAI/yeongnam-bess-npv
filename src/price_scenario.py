@@ -29,6 +29,16 @@ def build_hourly_elasticities(anchors: dict, default: float,
     return elasticities
 
 
+def load_elasticities(csv_path: str) -> pd.Series:
+    """Load a full 24-hour elasticity vector from CSV (hour, elasticity).
+
+    This is the interface for *real* regression output: replace the values in
+    data/elasticities.csv with your estimated hour-of-day coefficients.
+    """
+    df = pd.read_csv(csv_path)
+    return df.set_index("hour")["elasticity"]
+
+
 def apply_solar_scenario(baseline_smp: pd.Series, elasticities: pd.Series,
                          solar_growth_pct: float) -> pd.DataFrame:
     """Reshape the baseline curve given a % growth in solar generation."""

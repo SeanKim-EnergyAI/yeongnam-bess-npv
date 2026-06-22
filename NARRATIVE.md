@@ -58,9 +58,18 @@ into the cash-flow and NPV calc.
 
 **"The NPV is negative — so it's a bad project?"**
 On *energy arbitrage alone*, yes — and that matches reality: utility batteries
-rarely pencil out on arbitrage by itself. The model's job was to quantify the gap
-and the levers. Break-even needs lower capex, a wider spread, or stacked
-capacity/ancillary revenue, which I scoped as the next extension.
+rarely pencil out on arbitrage by itself. I quantified the gap with closed-form
+break-even levers: capex would need to fall ~5x (to ~78,000 KRW/kWh), or daily
+arbitrage be ~5x larger, or ~167,000 KRW/kW-yr of stacked capacity/ancillary
+revenue. So the project isn't "bad" — it's "arbitrage-only is insufficient, and
+here's exactly how much more is needed."
+
+**"How sensitive is the conclusion to that contested hour-13 coefficient?"**
+I ran it three ways — as-estimated, with the sign flipped, and with a uniform
+average elasticity — and NPV moved less than 0.5%. So the contested sign is an
+important academic question but immaterial to the investment call; capex and the
+overall spread dominate. I like that the model lets me *say that with a number*
+rather than hand-wave.
 
 **"Your 1pm elasticity is positive — doesn't solar lower midday prices?"**
 That's exactly the sign I'm skeptical of. It may be an artifact of the omitted
