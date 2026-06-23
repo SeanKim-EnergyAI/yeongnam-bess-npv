@@ -77,8 +77,9 @@ state-of-charge balance with round-trip efficiency, daily cycle cap).
 The LP optimum is **~8% below** the heuristic — because the heuristic implicitly
 buys a full cycle's charging energy in 4 hours, which violates the power limit.
 The LP charges over ~5 pre-dawn hours and stops discharging once the marginal
-charge hour costs more than the discharge. It is the physically feasible optimum,
-and it leaves the negative-NPV conclusion intact.
+charge hour costs more than the discharge. It is the physically feasible optimum
+(NPV −$144.3M vs the heuristic's −$142.5M — both deeply negative), so the
+conclusion is intact.
 
 ## How it works
 
