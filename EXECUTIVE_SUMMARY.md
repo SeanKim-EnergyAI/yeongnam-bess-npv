@@ -47,10 +47,16 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
 (annual cash flow) · `outputs/lp_dispatch.png` (LP-optimal schedule)
 
 ## Limitations
-Dispatch assumes perfect foresight of prices (both the heuristic and the LP);
-single national price; capex is literature-based; the positive daytime elasticity
-is the paper's own contested result, so the *mechanism* is treated as tentative
-(the *robustness* is not).
+- **Single-price market** → temporal (not locational) arbitrage on the national
+  SMP; Yeongnam is the asset location and solar driver, not a regional price.
+- **Single-buyer (CBP) market** → assumes SMP price-taker access; real Korean ESS
+  stacks REC / frequency-regulation / peak-shaving, so this is an upper-bound
+  screen and the negative result is conservative.
+- **Perfect-foresight dispatch** (heuristic and LP); one representative day.
+- **Energy arbitrage only** — no capacity / ancillary / REC revenue modeled.
+- Positive daytime elasticity is the paper's own contested result (night
+  coefficients weakly identified); robustness keeps NPV within ~2%. Capex is
+  literature-based.
 
 ## Future work
 - Revenue stacking (capacity / ancillary) and PPA structures.

@@ -96,6 +96,16 @@ heuristic, which exposed that the heuristic was buying a full cycle's energy in
 four hours, over the power limit. So the LP both tightened the model and removed
 an optimistic bias.
 
+**"Korea has a single national SMP — does arbitrage even make sense?"**
+Right — there's no locational price in Korea, so this is *temporal* arbitrage on
+the national SMP's intraday spread (~96 KRW/kWh pre-dawn vs ~142 midday), not a
+regional price difference. Yeongnam enters as the asset's location and the solar
+region that drives the price scenario. And because it's a single-buyer market
+where standalone merchant arbitrage is limited, I treat the model as an
+upper-bound screen of temporal value — which is exactly why a negative
+arbitrage-only NPV is a conservative, credible result, consistent with Korean
+storage relying on REC and ancillary revenue.
+
 **"What would you do with more time?"**
 Plug in real KPX 2024 prices and vendor capex, add a revenue-stacking layer,
 replace perfect foresight with a forecast-based dispatch, and run a Monte Carlo

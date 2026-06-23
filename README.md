@@ -135,6 +135,35 @@ The one literature-based input is battery capex (~$350/kWh, NREL ATB 2024 /
 Lazard LCOS midpoint) in `assumptions.py` — and the break-even table shows the
 conclusion holds across the full $300–400/kWh range.
 
+## Limitations
+
+*Market structure*
+- Korea has a **single national SMP**, so this is **temporal** (intraday)
+  arbitrage, not locational — Yeongnam is the asset's location and the solar
+  driver, not a separate regional price.
+- The **single-buyer (CBP) market** means the model assumes **SMP price-taker
+  access**. Standalone merchant arbitrage is regulatorily limited in Korea, where
+  ESS revenue in practice stacks REC / frequency-regulation / peak-shaving. This
+  is therefore an *upper-bound screen* of temporal arbitrage — which makes the
+  negative result conservative.
+
+*Modeling*
+- Perfect-foresight dispatch (heuristic and LP); no price-forecast error.
+- One representative day (hour-of-day mean SMP); day-to-day volatility that can
+  widen spreads is averaged out, likely *understating* arbitrage value.
+- Energy arbitrage only — no capacity payment, frequency regulation, or REC
+  revenue (exactly the stacking the conclusion says is required).
+- Flat 2%/yr degradation and O&M as a share of capex; no augmentation capex.
+
+*Data / inputs*
+- The positive daytime elasticity is the paper's own contested result; night-hour
+  coefficients are weakly identified (solar ≈ 0) and zeroed in the conservative
+  run. NPV stays within ~2% across all scenarios.
+- The IV elasticity is a marginal estimate; extrapolating to +30–100% solar is
+  out-of-sample.
+- Capex is literature-based (NREL ATB 2024 / Lazard, ~$350/kWh); break-even holds
+  across $300–400/kWh.
+
 ## Context
 
 Business extension of the working paper *"Does Solar Generation Lower the Korean
