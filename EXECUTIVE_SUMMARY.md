@@ -20,6 +20,7 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
 - 2024 hourly panel, 16 mainland regions, **N = 140,138** (the working-paper dataset)
 - National hour-of-day SMP and solar generation profile; hourly IV elasticities (HTE)
 - Battery capex: NREL ATB 2024 / Lazard LCOS, ~$350/kWh
+- Figures reported in USD at ~1,350 KRW/USD (2024 avg); analysis is KRW-native
 
 ## Method
 1. Translate elasticity → price scenario: `scenario = baseline × (1+g)^elasticity`
@@ -33,10 +34,10 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
    midday, so the battery charges at 3am and discharges into the daytime peak.
 2. **More solar slightly *raises* the spread** (my paper's intraday-absorption
    pattern) — the opposite of the textbook merit-order story.
-3. **Arbitrage-only NPV ≈ −1,923억 KRW; IRR undefined.** Robust within ~2% across
+3. **Arbitrage-only NPV ≈ −$142.5M; IRR undefined.** Robust within ~2% across
    every elasticity scenario → the econometric debate is immaterial to the
    investment; **capex dominates.**
-4. Break-even needs capex ~7x lower or ~211,000 KRW/kW-yr of stacked
+4. Break-even needs capex ~7x lower (~$47/kWh) or ~$156/kW-yr of stacked
    capacity/ancillary revenue.
 5. An **LP dispatch optimizer** shows the heuristic *overstates* revenue ~8% by
    ignoring the charging power limit; the feasible optimum confirms the result.

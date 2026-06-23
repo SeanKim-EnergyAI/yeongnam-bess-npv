@@ -21,7 +21,7 @@ memorize. The goal is to sound like I built it and interrogated it, because I di
 > *raises* daytime prices, an intraday-absorption pattern, so more solar actually
 > nudges arbitrage revenue up here, opposite to the textbook story.
 >
-> But on arbitrage alone the NPV is about −1,900억 won and never recovers the
+> But on arbitrage alone the NPV is about −$140M and never recovers the
 > capex. The striking part is the robustness: across every elasticity scenario —
 > the contested sign, the regional estimate, a flat average — NPV moves less than
 > 2%. So the econometric debate is real for the paper but immaterial to the
@@ -59,8 +59,8 @@ into the cash-flow and NPV calc.
 **"The NPV is negative — so it's a bad project?"**
 On *energy arbitrage alone*, yes — and that matches reality: utility batteries
 rarely pencil out on arbitrage by itself. I quantified the gap with closed-form
-break-even levers: capex would need to fall ~7x (to ~63,000 KRW/kWh), or daily
-arbitrage be ~7x larger, or ~211,000 KRW/kW-yr of stacked capacity/ancillary
+break-even levers: capex would need to fall ~7x (to ~$47/kWh), or daily
+arbitrage be ~7x larger, or ~$156/kW-yr of stacked capacity/ancillary
 revenue. So the project isn't "bad" — it's "arbitrage-only is insufficient, and
 here's exactly how much more is needed."
 

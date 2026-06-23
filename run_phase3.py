@@ -8,6 +8,9 @@ plus break-even levers and elasticity-scenario robustness.
 
 Run from the project root:
     python3 run_phase3.py
+
+The analysis is KRW-native; results are reported in USD (FX below) for an
+international reader. Battery capex is the only non-market input.
 """
 
 import os
@@ -33,7 +36,11 @@ ELAST_PATH = os.path.join(HERE, "data", "elasticities.csv")
 SOLAR_PATH = os.path.join(HERE, "data", "solar_profile_hourly.csv")
 OUT_DIR = os.path.join(HERE, "outputs")
 
-EOK = 1e8  # 1 억 = 100,000,000 KRW -> report large won figures in 억 (oeok)
+KRW_PER_USD = 1_350      # reporting FX (2024 average ~1,360)
+
+
+def usd_m(krw: float) -> float:
+    return krw / KRW_PER_USD / 1e6
 
 
 def run_pipeline(assumptions: dict, elasticities=None) -> dict:
@@ -65,12 +72,12 @@ def print_summary(assumptions: dict, result: dict) -> None:
     print(f"Discharge hours   : {sorted(arb['discharge_hours'])}")
     print(f"Avg charge price  : {arb['avg_charge_price_krw_per_mwh']:>12,.0f} KRW/MWh")
     print(f"Avg discharge px  : {arb['avg_discharge_price_krw_per_mwh']:>12,.0f} KRW/MWh")
-    print(f"Daily net revenue : {arb['net_revenue_krw']/EOK:>12.3f} 억 KRW")
+    print(f"Daily net revenue : {arb['net_revenue_krw']/KRW_PER_USD:>12,.0f} USD")
     print("-" * 64)
     irr = m["irr"]
-    print(f"NPV  (@{assumptions['discount_rate']:.0%}) : {m['npv_krw']/EOK:>12,.1f} 억 KRW")
+    print(f"NPV  (@{assumptions['discount_rate']:.0%}) : {usd_m(m['npv_krw']):>12,.1f} M USD")
     print(f"IRR               : {irr:>12.2%}" if irr == irr else
-          f"IRR               :          n/a")
+          f"IRR               :          n/a (never recovers capex)")
     print(f"Payback year      : {m['payback_year']}")
     print("=" * 64)
 
@@ -82,10 +89,10 @@ def print_breakeven(assumptions: dict, result: dict) -> None:
     mult = breakeven_daily_revenue_multiplier(daily, assumptions)
     stack = stacked_revenue_needed_per_kw_year(npv, assumptions)
     print("\nBreak-even levers (what would make NPV = 0):")
-    print(f"  Capex must fall to        : {be_capex:>10,.0f} KRW/kWh "
-          f"(now {assumptions['capex_per_kwh_krw']:,})")
-    print(f"  Daily arbitrage must be   : {mult:>10.1f} x  larger")
-    print(f"  OR stacked revenue of     : {stack:>10,.0f} KRW/kW-yr "
+    print(f"  Capex must fall to        : ${be_capex/KRW_PER_USD:>6,.0f}/kWh "
+          f"(now ${assumptions['capex_per_kwh_krw']/KRW_PER_USD:,.0f})")
+    print(f"  Daily arbitrage must be   : {mult:>6.1f} x  larger")
+    print(f"  OR stacked revenue of     : ${stack/KRW_PER_USD:>6,.0f}/kW-yr "
           f"(capacity / ancillary)")
 
 
@@ -106,8 +113,7 @@ def elasticity_scenarios(assumptions: dict, base_el: pd.Series,
     for name, el in variants.items():
         r = run_pipeline(assumptions, el)
         rows.append({"elasticity_scenario": name,
-                     "daily_rev_eok": r["arbitrage"]["net_revenue_krw"] / EOK,
-                     "npv_eok": r["metrics"]["npv_krw"] / EOK})
+                     "npv_M_usd": round(usd_m(r["metrics"]["npv_krw"]), 1)})
     return pd.DataFrame(rows)
 
 
@@ -118,7 +124,8 @@ def sensitivity(base_assumptions: dict, key: str, values: list) -> pd.DataFrame:
         a = dict(base_assumptions)
         a[key] = v
         m = run_pipeline(a)["metrics"]
-        rows.append({key: v, "npv_eok": m["npv_krw"] / EOK, "irr": m["irr"]})
+        rows.append({key: v, "npv_M_usd": round(usd_m(m["npv_krw"]), 1),
+                     "irr": m["irr"]})
     return pd.DataFrame(rows)
 
 
@@ -147,11 +154,11 @@ def plot_price_curve(assumptions: dict, result: dict, solar: pd.Series) -> str:
 
 
 def plot_cashflows(result: dict) -> str:
-    cf = result["cashflows"]["net_cashflow_krw"] / EOK
+    cf = result["cashflows"]["net_cashflow_krw"] / KRW_PER_USD / 1e6
     fig, ax = plt.subplots(figsize=(9, 4.5))
     ax.bar(cf.index, cf.values, color=["tab:red" if x < 0 else "tab:blue" for x in cf])
     ax.axhline(0, color="black", linewidth=0.8)
-    ax.set_xlabel("Year"); ax.set_ylabel("Net cash flow (100M KRW)")
+    ax.set_xlabel("Year"); ax.set_ylabel("Net cash flow (M USD)")
     ax.set_title("Annual net cash flow")
     path = os.path.join(OUT_DIR, "cashflows.png")
     fig.tight_layout(); fig.savefig(path, dpi=120); plt.close(fig)

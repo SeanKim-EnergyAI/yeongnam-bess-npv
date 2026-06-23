@@ -23,7 +23,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(HERE, "data", "baseline_smp_hourly.csv")
 ELAST_PATH = os.path.join(HERE, "data", "elasticities.csv")
 OUT_DIR = os.path.join(HERE, "outputs")
-EOK = 1e8
+KRW_PER_USD = 1_350
 
 
 def npv_of(daily_net_krw: float, a: dict) -> float:
@@ -65,10 +65,10 @@ def main() -> None:
     print("PHASE 4 - LP dispatch optimization vs heuristic")
     print("=" * 64)
     print(f"Solver status            : {lp['status']}")
-    print(f"Heuristic daily revenue  : {h_daily/EOK:>10.4f} 억 KRW")
-    print(f"LP-optimal daily revenue : {l_daily/EOK:>10.4f} 억 KRW  ({uplift:+.1f}%)")
-    print(f"Heuristic NPV (@{a['discount_rate']:.0%})    : {npv_of(h_daily, a)/EOK:>10,.1f} 억 KRW")
-    print(f"LP-optimal NPV (@{a['discount_rate']:.0%})   : {npv_of(l_daily, a)/EOK:>10,.1f} 억 KRW")
+    print(f"Heuristic daily revenue  : ${h_daily/KRW_PER_USD:>10,.0f}")
+    print(f"LP-optimal daily revenue : ${l_daily/KRW_PER_USD:>10,.0f}  ({uplift:+.1f}%)")
+    print(f"Heuristic NPV (@{a['discount_rate']:.0%})    : ${npv_of(h_daily, a)/KRW_PER_USD/1e6:>8,.1f}M")
+    print(f"LP-optimal NPV (@{a['discount_rate']:.0%})   : ${npv_of(l_daily, a)/KRW_PER_USD/1e6:>8,.1f}M")
     print("-" * 64)
     d = lp["dispatch"].round(1)
     active = d[(d["charge_mw"] > 0.1) | (d["discharge_mw"] > 0.1)]

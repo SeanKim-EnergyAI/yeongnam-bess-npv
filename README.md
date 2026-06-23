@@ -32,10 +32,12 @@ effect is second-order.
 | Baseline SMP (real 2024) | mean 125.5 KRW/kWh, min h4 = 96, max h10 = 142 |
 | Dispatch | charge 03–06h (~98), discharge daytime peak (~141) |
 | Arbitrage spread | ~42 KRW/kWh |
-| Daily net revenue | ~0.11억 KRW |
-| Capex | ~1,880억 KRW (~$350/kWh) |
-| **NPV @ 7%** | **≈ −1,923억 KRW** |
+| Daily net revenue | ~$7,800 |
+| Capex | ~$140M (~$350/kWh) |
+| **NPV @ 7%** | **≈ −$142.5M** |
 | IRR | undefined (cash flows never recover capex) |
+
+*Reported in USD at ~1,350 KRW/USD (2024 avg); the analysis itself is KRW-native.*
 
 **Energy arbitrage alone does not justify the capex** — a robust, defensible
 finding. The contribution is quantifying *how far* it misses and *which levers*
@@ -45,9 +47,9 @@ would close it.
 
 | Lever | Required | vs. now |
 |---|---|---|
-| Capex | ~63,000 KRW/kWh | ~7x below market (~470,000) |
+| Capex | ~$47/kWh | ~7x below market (~$348) |
 | Daily arbitrage | ~7.4x larger | spread far beyond the data |
-| Stacked revenue | ~211,000 KRW/kW-yr | capacity / ancillary on top |
+| Stacked revenue | ~$156/kW-yr | capacity / ancillary on top |
 
 ## Robustness: the econometric debate is immaterial to the investment
 
@@ -56,14 +58,13 @@ positive, against intuition). The model quantifies how much that matters:
 
 | Elasticity scenario | NPV |
 |---|---|
-| as-estimated (national HTE) | −1,923억 |
-| solar-hours only (night = 0) | −1,926억 |
-| Yeongnam intensity (×2.3)    | −1,905억 |
-| flat IV average (−0.0058)    | −1,936억 |
+| as-estimated (national HTE) | −$142.5M |
+| solar-hours only (night = 0) | −$142.7M |
+| Yeongnam intensity (×2.3)    | −$141.1M |
+| flat IV average (−0.0058)    | −$143.4M |
 
 All within ~2%. **The contested sign matters for the paper, not for the business
-call** — capex dominates. Even at 150,000 KRW/kWh (~$110/kWh, below market) NPV
-is still −410억.
+call** — capex dominates. Even at ~$110/kWh (below market) NPV is still −$30M.
 
 ## Phase 4 — LP-optimal dispatch
 
