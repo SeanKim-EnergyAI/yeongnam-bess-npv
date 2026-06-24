@@ -60,6 +60,13 @@ def main() -> None:
     (elasticities.rename("elasticity").rename_axis("hour")
                  .reset_index().to_csv(os.path.join(DATA, "elasticities.csv"), index=False))
 
+    # Full national hourly SMP series (one row per date-hour) for the day-by-day
+    # analytics in run_analytics.py. SMP is public KPX market data.
+    national = (panel.drop_duplicates(["date", "hour"])[["date", "hour", "smp"]]
+                .rename(columns={"smp": "smp_krw_per_kwh"})
+                .sort_values(["date", "hour"]))
+    national.to_csv(os.path.join(DATA, "smp_2024_hourly.csv"), index=False)
+
     print(f"Baseline SMP : mean {baseline.mean():.1f} KRW/kWh | "
           f"cheapest {list(baseline.nsmallest(4).index)} | dearest {list(baseline.nlargest(4).index)}")
     print(f"Solar (MWh)  : peak hour {int(solar.idxmax())} ({solar.max():.0f}), "

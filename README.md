@@ -81,6 +81,27 @@ charge hour costs more than the discharge. It is the physically feasible optimum
 (NPV −$144.3M vs the heuristic's −$142.5M — both deeply negative), so the
 conclusion is intact.
 
+## Full-year validation & break-even map
+
+`run_analytics.py` stress-tests two questions a business reader asks.
+
+**Does the average-day shortcut hide anything?** Re-running the dispatch on all
+366 *actual* daily curves (not the mean curve) gives **$10,691/day vs $7,468** on
+the average day — averaging *understated* arbitrage value by **43%** (individual
+days have wider spreads than the average day, a Jensen's-inequality effect). NPV
+improves to −$134M but stays deeply negative, so the conclusion is robust. Daily
+profit is volatile and seasonal (P10 $3.4k, P90 $18.8k, some days negative;
+winter ≈ 2.5× summer).
+
+![daily distribution and seasonality](outputs/analytics_distribution.png)
+
+**What would actually make it investable?** The break-even map sweeps battery
+capex against stacked (capacity / ancillary) revenue and draws the NPV = 0
+frontier — turning the result into one decision picture for a developer or
+regulator. Today's point ($350/kWh, no stacking) sits deep in the red.
+
+![break-even frontier](outputs/analytics_breakeven_frontier.png)
+
 ## How it works
 
 ```
@@ -104,8 +125,10 @@ scenario_SMP[h] = baseline_SMP[h] * (1 + solar_growth) ** elasticity[h]
 | `src/valuation.py`      | NPV, IRR, payback |
 | `src/breakeven.py`      | Closed-form break-even capex / arbitrage / stacking |
 | `src/optimize_dispatch.py` | LP: optimal charge/discharge under battery physics |
+| `src/daily_arbitrage.py` | Per-day arbitrage over the full year (distribution, seasonality) |
 | `run_phase3.py`         | Orchestrate: summary, break-even, robustness, plots |
 | `run_phase4.py`         | LP dispatch optimization vs the heuristic |
+| `run_analytics.py`      | Full-year distribution + break-even decision frontier |
 
 ## Run
 
@@ -113,6 +136,7 @@ scenario_SMP[h] = baseline_SMP[h] * (1 + solar_growth) ** elasticity[h]
 pip install -r requirements.txt
 python3 run_phase3.py                       # NPV, break-even, robustness, sensitivities
 python3 run_phase4.py                       # LP-optimal dispatch vs the heuristic
+python3 run_analytics.py                    # full-year distribution + break-even map
 ```
 
 To regenerate the inputs from the raw research files:
@@ -129,6 +153,7 @@ python3 scripts/build_inputs_from_panel.py \
 | `data/baseline_smp_hourly.csv` | National hour-of-day mean SMP, 2024 mainland panel (N=140,138) |
 | `data/solar_profile_hourly.csv` | National hour-of-day mean solar generation, same panel |
 | `data/elasticities.csv` | Hourly log(SMP)~log(Solar) IV coefficients (Phase 2 HTE) |
+| `data/smp_2024_hourly.csv` | Full national hourly SMP series, 2024 (public KPX data) |
 
 Only these small aggregates live here; the raw panel stays in the research repo.
 The one literature-based input is battery capex (~$350/kWh, NREL ATB 2024 /
@@ -149,8 +174,9 @@ conclusion holds across the full $300–400/kWh range.
 
 *Modeling*
 - Perfect-foresight dispatch (heuristic and LP); no price-forecast error.
-- One representative day (hour-of-day mean SMP); day-to-day volatility that can
-  widen spreads is averaged out, likely *understating* arbitrage value.
+- The headline uses one representative day; `run_analytics.py` backtests all 366
+  real days and finds the mean is 43% higher (volatility widens spreads), yet NPV
+  stays deeply negative — so the shortcut is conservative, not load-bearing.
 - Energy arbitrage only — no capacity payment, frequency regulation, or REC
   revenue (exactly the stacking the conclusion says is required).
 - Flat 2%/yr degradation and O&M as a share of capex; no augmentation capex.

@@ -106,6 +106,16 @@ upper-bound screen of temporal value — which is exactly why a negative
 arbitrage-only NPV is a conservative, credible result, consistent with Korean
 storage relying on REC and ancillary revenue.
 
+**"You modeled an average day — isn't that a big simplification?"**
+I tested it rather than assumed it. I backtested the dispatch on all 366 actual
+2024 daily curves, and the mean came out 43% *higher* than the average-day
+estimate — because individual days have wider spreads than the smoothed average
+(a Jensen's-inequality effect). Daily profit is volatile and seasonal (winter
+roughly 2.5× summer, some days even negative). The point: even giving arbitrage
+that 43% benefit of the doubt, NPV stays around −$134M — so the conclusion isn't
+an artifact of the shortcut. I also turned it into a break-even map (capex vs
+stacked revenue) so a developer or regulator can read off what it would take.
+
 **"What would you do with more time?"**
 Plug in real KPX 2024 prices and vendor capex, add a revenue-stacking layer,
 replace perfect foresight with a forecast-based dispatch, and run a Monte Carlo

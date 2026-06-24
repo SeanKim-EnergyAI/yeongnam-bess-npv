@@ -28,6 +28,7 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
 3. Annual cash flows (capex, O&M, degradation) → NPV / IRR
 4. Closed-form break-even + 4-scenario elasticity robustness + sensitivities
 5. **LP optimization** of dispatch (PuLP) under power, capacity, state-of-charge, and cycle constraints
+6. **Full-year backtest** of all 366 daily price curves + a capex × stacked-revenue break-even frontier
 
 ## Key findings
 1. **No Korean "duck curve" yet** — the cheapest hours are pre-dawn (03–05h), not
@@ -41,10 +42,14 @@ Is a 100 MW / 4 h battery in Yeongnam worth building on **energy arbitrage alone
    capacity/ancillary revenue.
 5. An **LP dispatch optimizer** shows the heuristic *overstates* revenue ~8% by
    ignoring the charging power limit; the feasible optimum confirms the result.
+6. **Backtesting all 366 days** (vs the average day) raises arbitrage 43% — yet
+   NPV stays −$134M; daily profit is volatile and seasonal (winter ≈ 2.5× summer).
 
 ## Figures
-`outputs/price_curve.png` (SMP, solar, dispatch) · `outputs/cashflows.png`
-(annual cash flow) · `outputs/lp_dispatch.png` (LP-optimal schedule)
+`outputs/price_curve.png` (SMP, solar, dispatch) · `outputs/cashflows.png` (cash
+flow) · `outputs/lp_dispatch.png` (LP schedule) · `outputs/analytics_distribution.png`
+(daily distribution + seasonality) · `outputs/analytics_breakeven_frontier.png`
+(capex × stacked-revenue decision map)
 
 ## Limitations
 - **Single-price market** → temporal (not locational) arbitrage on the national
