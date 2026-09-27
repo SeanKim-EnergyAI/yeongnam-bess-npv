@@ -1,3 +1,8 @@
+> **이전 버전 (Previous version, commit bb253a4).** 이 문서의 수치(−$142.5M, $47/kWh,
+> $156/kW-yr, "366 days", "43%", "−0.58% / −1.35%" 등)는 감사 이전 결과이며 현재 결과가
+> 아닙니다. 최신 결과는 [docs/model_audit.md](docs/model_audit.md)와
+> [docs/technical_memo.md](docs/technical_memo.md)를 참조하세요. 본문은 수정하지 않았습니다.
+
 # Executive Summary — Does Battery Storage Pay Under Korea's Solar Transition?
 
 *A business extension of the working paper "Does Solar Generation Lower the Korean SMP?"*

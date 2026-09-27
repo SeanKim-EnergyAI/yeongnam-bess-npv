@@ -1,0 +1,3 @@
+cap_basis,constraint,days,arbitrage_profit_sum_usd_m,daily_mean_usd,no_trade_days,max_internal_out_mwh_per_day,max_delivered_mwh_per_day,max_equivalent_internal_cycles_per_day,days_differing_between_bases,annualisation,yr1_arbitrage_profit_usd_m,yr1_fixed_om_usd_m,yr1_net_cashflow_usd_m,npv_usd_m,daily_mean_change_vs_delivered_pct
+delivered,sum_h d[h] <= 400 MWh/day (bb253a4),364,3.6496,10026.3,7,431.33,400.0,1.0783,60,daily mean x 350 operating days,3.509,2.785,0.724,-136.07,0.0
+internal,sum_h d[h]/sqrt(0.86) <= 400 MWh/day (audit choice),364,3.6337,9982.7,7,400.0,370.94,1.0,60,daily mean x 350 operating days,3.494,2.785,0.709,-136.2,-0.435

@@ -10,3 +10,23 @@ venv/
 .DS_Store
 
 # Keep outputs/*.png committed so they render in the README.
+
+# External source documents: not redistributed. Keep local copies here; see
+# docs/source_manifest.md for download locations and hashes. Listed by name so
+# that project outputs (PNG/CSV/PDF elsewhere) are not affected.
+docs/sources/kpx_notice_2026-05_ess_central_contract_mainland.pdf
+docs/sources/KPX_rules_20260725_excerpt.pdf
+docs/sources/KPX_rules_20260725.pdf
+docs/sources/KEC_2025-052_pp520-526_excerpt.pdf
+docs/sources/KEC_2025-052_cover_and_addenda_excerpt.pdf
+docs/sources/KEC_official_attachment.pdf
+docs/sources/ATB_2024_v3_Workbook.xlsx
+docs/sources/ATB_2024_battery_webtext.pdf
+docs/sources/atb2024_battery_capex_inclusions.pdf
+docs/sources/atb2024_battery_cost_components.pdf
+docs/sources/atb2024_battery_om_inclusions.pdf
+docs/sources/atb2024_battery_tech_summary.pdf
+
+# Local backups
+/*.bundle
+/*_source.tar.gz

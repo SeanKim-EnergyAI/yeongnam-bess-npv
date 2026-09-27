@@ -1,0 +1,13 @@
+check,value
+rows,8760
+calendar_days_in_year,366
+expected_hours_in_year,8784
+dates_present,366
+complete_dates,364
+incomplete_dates_missing_hours,"{""2024-01-01"": [24], ""2024-12-31"": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}"
+missing_calendar_dates,[]
+duplicate_date_hour_rows,0
+hour_values_outside_1_24,[]
+null_prices,0
+zero_price_hours,6
+negative_price_hours,0

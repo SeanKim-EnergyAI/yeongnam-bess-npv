@@ -1,0 +1,4 @@
+lever,breakeven_value,npv_after_substitution_krw,passes_abs_tol_1_krw
+capex_krw_per_kwh,81164.62172326214,1.9073486328125e-06,True
+daily_revenue_multiplier,5.790700307857109,-3.0517578125e-05,True
+stacked_revenue_krw_per_kw_yr,201874.9679756124,-4.57763671875e-05,True

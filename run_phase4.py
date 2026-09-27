@@ -1,7 +1,8 @@
 """Phase 4 - LP optimization of battery dispatch.
 
-Compares the heuristic dispatch (Phase 3) with an LP optimum on the same real
-2024 price scenario, then values both. Run from the project root:
+Compares the legacy heuristic dispatch with the LP optimum on the 2024
+hour-of-day mean SMP (observed, no solar scenario), then values both. The
+full-year baseline is in run_baseline.py. Run from the project root:
 
     python3 run_phase4.py
 """
@@ -42,7 +43,7 @@ def plot_dispatch(dispatch, a: dict) -> str:
     ax2.plot(dispatch.index, dispatch["price_smp"] * dispatch["soc_mwh"].max()
              / dispatch["price_smp"].max(), color="gray", linestyle=":", label="SMP (scaled)")
     ax2.set_ylabel("SOC (MWh)  /  SMP (scaled)")
-    ax.set_title("LP-optimal battery dispatch (real 2024 prices)")
+    ax.set_title("LP-optimal dispatch on the 2024 hour-of-day mean SMP")
     ax.legend(loc="upper left"); ax2.legend(loc="upper right")
     path = os.path.join(OUT_DIR, "lp_dispatch.png")
     fig.tight_layout(); fig.savefig(path, dpi=120); plt.close(fig)
@@ -77,11 +78,10 @@ def main() -> None:
 
     p = plot_dispatch(lp["dispatch"], a)
     print(f"\nSaved plot: {p}")
-    print("\nTakeaway: the heuristic OVERSTATES revenue ~8% -- it implicitly buys a")
-    print("full cycle's charging energy in 4 hours, exceeding the power limit. The")
-    print("LP charges over ~5 hours and delivers less than a full cycle when the")
-    print("marginal charge hour costs more than the discharge, giving the feasible")
-    print("optimum. The negative-NPV conclusion is unchanged.")
+    print(f"\nTakeaway: the LP is {uplift:+.1f}% vs the heuristic (heuristic is infeasible:")
+    print("it books 400 MWh delivered from 465 MWh drawn in 4 h (116 MW,")
+    print("above the 100 MW limit) and ignores hour order. The LP keeps the 400 MWh")
+    print("internal SOC bound, draws ~431 MWh and delivers ~371 MWh per full cycle).")
 
 
 if __name__ == "__main__":

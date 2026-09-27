@@ -1,0 +1,10 @@
+varied,value,capex_krw_bn,fixed_om_krw_bn_per_yr,breakeven_price_krw_per_kw_h,change_vs_base_pct,npv_at_breakeven_krw,status
+capex_multiplier,0.75,135.715,4.524,44.349,-20.36,3.0517578125e-05,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+capex_multiplier,1.0,180.954,4.524,55.689,0.0,0.0,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+capex_multiplier,1.25,226.192,4.524,67.029,20.36,-1.52587890625e-05,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+effective_payment_factor,1.0,180.954,4.524,55.689,0.0,0.0,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+effective_payment_factor,0.95,180.954,4.524,58.62,5.26,4.57763671875e-05,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+effective_payment_factor,0.9,180.954,4.524,61.876,11.11,4.57763671875e-05,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+om_multiplier,0.75,180.954,3.393,53.107,-4.64,4.57763671875e-05,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+om_multiplier,1.0,180.954,4.524,55.689,0.0,0.0,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+om_multiplier,1.25,180.954,5.655,58.271,4.64,4.57763671875e-05,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"

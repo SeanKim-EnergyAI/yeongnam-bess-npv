@@ -1,0 +1,5 @@
+case,feasible_schedule,soc_boundary,cycle_cap,days,arbitrage_profit_sum_usd_m,daily_mean_usd,vs_daily_reset_lp_pct,no_trade_days,loss_days,annualisation,yr1_arbitrage_profit_usd_m,yr1_fixed_om_usd_m,yr1_net_cashflow_usd_m,npv_usd_m
+legacy heuristic,"no (116 MW charge, ignores hour order)",none modelled,exactly 4 h in / 4 h out every day,364,3.9113,10745.3,7.64,0,10,daily mean x 350 operating days,3.761,2.785,0.976,-134.03
+daily-reset LP (BASELINE),yes,0 at start and end of every day,"internal, per day",364,3.6337,9982.7,0.0,7,0,daily mean x 350 operating days,3.494,2.785,0.709,-136.2
+"continuous-SOC LP, per-day cap (diagnostic)",yes,0 at 2024-01-02 h1 start and 2024-12-30 h24 end only,"internal, per 24-h block",364,3.6575,10048.1,0.65,n/a (one horizon),n/a,daily mean x 350 operating days,3.517,2.785,0.732,-136.01
+"continuous-SOC LP, pooled cap (diagnostic)",yes,0 at 2024-01-02 h1 start and 2024-12-30 h24 end only,"internal, 364 cycles pooled over period",364,3.7473,10294.7,3.13,n/a (one horizon),n/a,daily mean x 350 operating days,3.603,2.785,0.818,-135.31

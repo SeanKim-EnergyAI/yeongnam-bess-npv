@@ -17,8 +17,14 @@ def get_assumptions() -> dict:
         "power_mw": 100,                  # rated power
         "duration_h": 4,                  # hours of storage at rated power
         "round_trip_efficiency": 0.86,    # AC-to-AC; energy out / energy in
-        "cycles_per_day": 1,              # one charge + discharge per day
+        # energy_mwh below is INTERNAL usable storage (the LP's SOC bound). A full
+        # cycle draws energy/sqrt(rte) and delivers energy*sqrt(rte) at the meter.
+        "cycles_per_day": 1,              # cap on internal energy withdrawn per 24 h
+        # Annual revenue = mean daily LP profit x this. Assumes outage days are
+        # average days; it is an availability assumption, not a 2024 observation.
         "operating_days_per_year": 350,   # ~15 days/yr reserved for maintenance
+        # Applied as a revenue haircut (1-deg)^(t-1); the dispatch LP itself is not
+        # re-solved with a smaller SOC bound, and no augmentation/replacement capex.
         "annual_degradation": 0.02,       # usable-capacity fade per year
 
         # --- Financial spec ---
@@ -32,13 +38,21 @@ def get_assumptions() -> dict:
         "project_life_years": 15,
 
         # --- Solar growth scenario (this reshapes the price curve) ---
-        "solar_growth_pct": 0.30,         # assumed % increase in solar generation
+        # Baseline = observed 2024 prices (0 growth). The +30% case is an
+        # EXPLORATORY sensitivity only: the regression behind the coefficients is
+        # not in this repo and cannot be re-verified here (docs/model_audit.md D).
+        # "Growth" means solar GENERATION (the regressor), not irradiance and not
+        # installed capacity; capacity growth maps 1:1 only with no curtailment.
+        "solar_growth_pct": 0.0,
+        "exploratory_solar_growth_pct": 0.30,
 
         # --- Elasticity context (the hourly vector lives in data/elasticities.csv) ---
-        # From the working paper: IV regression of log(SMP) on log(Solar).
-        # -0.0058 means "+1% solar -> -0.58% SMP" on the national average.
+        # Reported as an IV regression of log(SMP) on log(Solar). If it is truly
+        # log-log, -0.0058 means +1% solar -> exp(-0.0058*ln 1.01)-1 ~= -0.0058% SMP
+        # (NOT -0.58%), which is what src/price_scenario.py computes. Values are
+        # kept as provided; spec, units and sample are unverified.
         "elasticity_iv_average": -0.0058,      # national mainland, Phase 1 main spec
-        "elasticity_zonal_yeongnam": -0.0135,  # Yeongnam, Phase 2B (~2.3x stronger)
+        "elasticity_zonal_yeongnam": -0.0135,  # Yeongnam coefficient, Phase 2B (ratio ~2.3)
         # Hours below this solar generation (MWh) are treated as non-solar: their
         # IV coefficients are weakly identified and zeroed in the conservative run.
         "solar_active_threshold_mwh": 50,

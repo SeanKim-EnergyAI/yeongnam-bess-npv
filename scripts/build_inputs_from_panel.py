@@ -28,7 +28,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "..", "data")
 
 
+def assert_same_within_date_hour(panel: pd.DataFrame, value_col: str) -> None:
+    """Fail if regional rows for one (date, hour) disagree on `value_col`.
+
+    drop_duplicates(["date", "hour"]) silently keeps the first region's row; that
+    is only safe when the column is truly national (identical across regions).
+    """
+    spread = panel.groupby(["date", "hour"])[value_col].agg(lambda s: s.nunique(dropna=False))
+    bad = spread[spread > 1]
+    if len(bad):
+        raise ValueError(f"{value_col} differs across regions for {len(bad)} (date, hour) "
+                         f"pairs, e.g. {list(bad.index[:3])}; not a national column")
+
+
 def national_hourly(panel: pd.DataFrame, value_col: str) -> pd.Series:
+    assert_same_within_date_hour(panel, value_col)
     one_per_hour = panel.drop_duplicates(["date", "hour"])
     return one_per_hour.groupby("hour")[value_col].mean()
 
@@ -62,6 +76,8 @@ def main() -> None:
 
     # Full national hourly SMP series (one row per date-hour) for the day-by-day
     # analytics in run_analytics.py. SMP is public KPX market data.
+    # No filling or date shifting here: incomplete dates are reported and excluded
+    # downstream by src/data_checks.py.
     national = (panel.drop_duplicates(["date", "hour"])[["date", "hour", "smp"]]
                 .rename(columns={"smp": "smp_krw_per_kwh"})
                 .sort_values(["date", "hour"]))
