@@ -1,38 +1,37 @@
-# Yeongnam 100MW BESS — Arbitrage NPV
+# Korean BESS screening model — 2024 SMP arbitrage (A) and a conditional central-contract scenario (B)
 
-**Turning a causal estimate into an investment decision.** My working paper
-estimates how solar generation moves Korea's System Marginal Price (SMP). This
-project asks the business question that follows: **is a 100MW / 4h battery in the
-Yeongnam region worth building on price arbitrage alone?**
+The repository name (`yeongnam-bess-npv`) is kept for continuity. The analysis
+itself uses the **single national SMP** and does **not** model Yeongnam-specific
+prices, grid constraints or sites.
 
-Built entirely on the paper's own 2024 data — the same 140,138-observation panel
-behind the regression — not stylized inputs.
+## Questions, methods and limits
 
-## Scope of the two cases
+| | Case A — SMP arbitrage | Case B — central contract financial scenario |
+|---|---|---|
+| Question | Under observed 2024 SMP and stated cost, operating and finance assumptions, does a 100 MW / 4 h battery recover its capex from price-taker arbitrage alone? | Under the settlement structure of KPX notice 제2026-05호 (2026 mainland ESS central contract market), what fixed contract price would give NPV = 0 for a hypothetical 50 MW / 300 MWh (송전단, 6 h) plant, given stated cost and payment assumptions? |
+| Method | Per-day LP dispatch on the **364 complete days** of 2024 hourly SMP (a diagnostic sample, not a full calendar year); perfect foresight within each day; SOC empty at midnight; 1 internal cycle/day; mean day × 350 operating days; 15-year cash flows at 7% | Annual cash flows from the notice's settlement structure and the operation rules' hourly EFR form; cost from the ATB 2024 v3 6-hour OCC (US 2022$) at an assumed exchange rate; break-even price solved and re-substituted |
+| Result | NPV ≈ −$136.2M under these assumptions | Break-even ≈ 55.69 KRW/kW-h ⚠ **conditional** |
+| Main limits | One historical year repeated; perfect foresight; revenue haircut for degradation; 24 missing hours unexplained; discount-rate basis not reconciled with the price basis (see Limitations) | Conditional on the cost basis (US 2022$ OCC, no Korean connection/financing cost), the payment assumption (contracted EOSE, hypothetical factor f) and the capacity-maintenance method (contract conformity unconfirmed). Not an actual biddable project and not an assessment of Korean BESS profitability in general |
 
-- **Case A** — price-taker SMP arbitrage analysis on a **364-day diagnostic sample** of 2024 prices, under explicit assumptions (perfect foresight, SOC reset at midnight, annualised as mean day × 350).
-- **Case B** — a contract **financial scenario** for the 2026 mainland ESS central contract market. It is **conditional** on its cost basis (ATB US 2022$ OCC, assumed exchange rate), its payment assumption (contracted EOSE, hypothetical payment factor f) and its capacity-maintenance method (contract conformity unconfirmed). It is not an actual biddable project and not an assessment of Korean BESS profitability in general.
-- A and B differ in size, duration, period, revenue mechanism and cost basis all at once. The gap between them is **not a causal effect of policy**.
+A and B differ in size, duration, period, revenue mechanism and cost basis all
+at once. The gap between them is **not a causal effect of policy**, and B does
+not show that the central contract market is profitable.
 
-## Two findings that survive the real data
+## Observed 2024 hourly price pattern (description, not a causal finding)
 
-**1. Korea has no "duck curve" yet — so the battery charges pre-dawn, not midday.**
-The cheapest hours in 2024 are 03–05h (~96 KRW/kWh), when solar output is zero;
-midday and evening sit on a broad expensive plateau (~134–142). The solar-driven
-midday price dip that BESS arbitrage relies on in California has not emerged in
-Korea's single-price market.
+In the hour-of-day mean SMP used here (`data/baseline_smp_hourly.csv`), the
+lowest hours are 03–05h (96.2–98.8 KRW/kWh). Hours 09–21h lie between 130.4 and
+142.0. The hour convention (hour-ending KST) is assumed, not verified. The LP
+therefore charges mainly in the early morning.
 
-**2. (Exploratory) More solar slightly *raises* the spread here — the opposite of the naive story.**
-My paper's hourly estimates show a positive solar effect on *daytime* SMP (the
-"intraday absorption pattern"). Because the battery discharges into those
-daytime-peak hours, growing solar nudges its revenue *up*, not down. But the
-effect is second-order. *This rests on hourly coefficients whose estimation code
-is not in this repo, so it is reported as an exploratory sensitivity, separate
-from the baseline (see [docs/model_audit.md](docs/model_audit.md), D1–D4).*
+This is an observation about 2024 prices. **Why** prices have this shape (demand,
+fuel costs, must-run generation, solar output or other factors) is not tested in
+this repository. The data do not show a midday price trough in 2024. That is
+not evidence about how prices will respond to future solar growth.
 
 ![Korea 2024 SMP, solar, and dispatch](outputs/price_curve.png)
 
-## TL;DR result (baseline, `run_baseline.py`)
+## Case A result (baseline, `run_baseline.py`)
 
 | Metric | Value |
 |---|---|
@@ -56,9 +55,9 @@ hour-of-day mean day under the +30% solar scenario; the audit reproduces it and
 explains every step of the change ([docs/model_audit.md](docs/model_audit.md),
 `outputs/before_after_comparison.csv`).
 
-**Energy arbitrage alone does not justify the capex** — a robust, defensible
-finding. The contribution is quantifying *how far* it misses and *which levers*
-would close it.
+Under these assumptions (2024 prices repeated, perfect foresight within the day,
+the stated capex, O&M, degradation and 7% rate), price-taker arbitrage alone does
+not recover the capex. The break-even levers below show how far it misses.
 
 ## Break-even levers (what would make NPV = 0)
 
@@ -70,27 +69,6 @@ Each value is plugged back into the cash-flow model and returns |NPV| < 1 KRW
 | Capex | ~$60/kWh | ~5.8x below the $348 assumption |
 | Daily arbitrage | ~5.8x larger | spread far beyond the 2024 data |
 | Stacked revenue | ~$150/kW-yr | constant extra revenue on top (illustrative; no market price assumed) |
-
-## Exploratory: solar-scenario sensitivity (not part of the baseline)
-
-`run_phase3.py` reshapes the **hour-of-day mean** price curve with the hourly
-coefficient vector at +30% solar *generation* and re-runs the LP on that one
-average day. The coefficients are treated as log-log elasticities
-(`scenario = base × exp(β·ln 1.3)`); their estimation code is not in this repo.
-
-| Coefficient vector (exploratory) | NPV (representative day) |
-|---|---|
-| no scenario (observed mean day)          | −$145.1M |
-| as-estimated (national HTE)              | −$144.3M |
-| solar-hours only (night = 0)             | −$144.5M |
-| national HTE rescaled ×2.3               | −$143.0M |
-| flat IV average (−0.0058)                | −$145.1M |
-
-The spread is ~1.5%. The ×2.3 row rescales the *national* vector and still
-applies it to the *national* SMP, so it is **not** a Yeongnam causal effect or a
-regional price. The representative day is itself below the per-day baseline
-(−$145.1M vs −$136.2M) because averaging prices first can only lower the
-optimum.
 
 ## LP dispatch vs the original heuristic
 
@@ -159,6 +137,34 @@ simplifications and the blocked items are in
 review memo is [docs/technical_memo.md](docs/technical_memo.md); a 1-page note is [docs/explainer_note.md](docs/explainer_note.md).
 
 ![Case B break-even contract price](figures/contract_breakeven_sensitivity.png)
+
+## Exploratory: solar-coefficient scenario (not part of the baseline)
+
+This section depends on hourly coefficients from a separate working paper. Their
+estimation code, units and sample are **not in this repository** and have not
+been verified here (see [docs/model_audit.md](docs/model_audit.md), D1–D4). The
+hourly vector's mean (+0.004) also disagrees in sign with the stated average
+(−0.0058). The results are exploratory only. They are not evidence that more solar
+raises or lowers the arbitrage spread.
+
+`run_phase3.py` reshapes the **hour-of-day mean** price curve with the hourly
+coefficient vector at +30% solar *generation* and re-runs the LP on that one
+average day. The coefficients are treated as log-log elasticities
+(`scenario = base × exp(β·ln 1.3)`); their estimation code is not in this repo.
+
+| Coefficient vector (exploratory) | NPV (representative day) |
+|---|---|
+| no scenario (observed mean day)          | −$145.1M |
+| as-estimated (national HTE)              | −$144.3M |
+| solar-hours only (night = 0)             | −$144.5M |
+| national HTE rescaled ×2.3               | −$143.0M |
+| flat IV average (−0.0058)                | −$145.1M |
+
+Across these coefficient vectors the representative-day NPV moves by ~1.5%. The ×2.3 row rescales the *national* vector and still
+applies it to the *national* SMP, so it is **not** a Yeongnam causal effect or a
+regional price. The representative day is itself below the per-day baseline
+(−$145.1M vs −$136.2M) because averaging prices first can only lower the
+optimum.
 
 ## How it works
 
@@ -240,13 +246,17 @@ See [docs/model_audit.md](docs/model_audit.md) for evidence and open items.
 
 *Market structure*
 - Korea has a **single national SMP**, so this is **temporal** (intraday)
-  arbitrage, not locational — Yeongnam is the asset's location and the solar
-  driver, not a separate regional price.
+  arbitrage, not locational. No regional price, grid constraint or site is
+  modelled.
 - The **single-buyer (CBP) market** means the model assumes **SMP price-taker
   access**. Standalone merchant arbitrage is regulatorily limited in Korea, where
-  ESS revenue in practice stacks REC / frequency-regulation / peak-shaving. This
-  is therefore an *upper-bound screen* of temporal arbitrage — which makes the
-  negative result conservative.
+  ESS revenue in practice can come from other sources (REC, frequency regulation,
+  peak shaving, contracts). None of these is modelled.
+- Perfect foresight makes the LP profit an **upper bound on arbitrage profit only
+  for the same prices and the same operating constraints** (power, SOC window,
+  efficiency, 1 cycle/day, SOC empty at midnight). It is **not** an upper bound on
+  an actual project's total revenue: other revenue streams, or different
+  operating rules (e.g. continuous SOC, more cycles), can yield more.
 
 *Dispatch*
 - **Perfect foresight** within each day (overstates achievable revenue; no
@@ -267,7 +277,11 @@ See [docs/model_audit.md](docs/model_audit.md) for evidence and open items.
 - 2%/yr degradation applied as a revenue haircut, not tied to cycling; no
   augmentation/replacement capex, residual value or tax. With flat O&M, net cash
   flow turns negative in years 13–15 and there is no early-retirement option.
-- The 7% discount rate is not labelled real or nominal; flat prices imply real.
+- The 7% discount rate is not labelled real or nominal, and the price basis is
+  not reconciled with it. 2024 prices (2024 KRW) and O&M are held flat for 15
+  years. A consistent pair would be a real rate with constant-2024-KRW flows, or a
+  nominal rate with escalated prices and costs. This check is open; the inputs
+  are unchanged.
 - Energy arbitrage only — no capacity payment, frequency regulation, or REC
   revenue.
 
@@ -277,14 +291,15 @@ See [docs/model_audit.md](docs/model_audit.md) for evidence and open items.
 - Solar coefficients: the regression specification, units, sample and code are
   not in this repo, and the hourly vector's mean (+0.004) disagrees in sign with
   the stated average (−0.0058). Solar results are therefore exploratory only.
-  Extrapolating a marginal estimate to +30–100% solar is out-of-sample.
+  Applying a marginal estimate to a +30% change is out-of-sample.
 - Capex is literature-based (NREL ATB 2024 / Lazard, ~$350/kWh; exact table not
   verified here); break-even capex is ~$60/kWh.
 
 ## Context
 
-Business extension of the working paper *"Does Solar Generation Lower the Korean
-SMP?"* (IV / 2SLS, 2024 hourly panel, 16 mainland regions, first-stage F = 27,351;
-reported coefficients −0.0058 national and −0.0135 Yeongnam; read as log-log
-elasticities these are −0.0058% and −0.0135% SMP per +1% solar). This repo is the "academic result →
-business case" layer.
+The 2024 hourly inputs come from the data panel of a separate working paper,
+*"Does Solar Generation Lower the Korean SMP?"* (IV / 2SLS, 2024 hourly panel, 16
+mainland regions). That paper's coefficients (reported −0.0058 national and
+−0.0135 Yeongnam; read as log-log elasticities, −0.0058% and −0.0135% SMP per +1%
+solar) enter **only** the exploratory scenario above. Their estimation is not
+reproduced or verified in this repository.

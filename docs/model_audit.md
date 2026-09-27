@@ -249,7 +249,7 @@ It is a property of averaging, not a new empirical finding.
 | Zero-price hours | kept as observed | — |
 | Degradation | 2%/yr revenue haircut; LP not re-solved; not linked to cycling | cycle-based fade and/or augmentation |
 | Future prices | 2024 prices repeated for 15 years (a what-if, not a forecast) | price scenarios |
-| Discount rate | 7%, real vs nominal unstated (flat prices imply real) | — |
+| Discount rate | 7%, real vs nominal unstated; prices and O&M flat in 2024 KRW. Consistency between the rate basis and the price basis is not checked (open) | a real rate with constant-KRW flows, or a nominal rate with escalated flows |
 
 ## 5. Unresolved — raw data needed
 
@@ -262,13 +262,13 @@ It is a property of averaging, not a new empirical finding.
 
 ## 6. Remaining limitations that affect results
 
-- Perfect foresight overstates achievable revenue. No forecast-error model exists.
+- Perfect foresight overstates achievable arbitrage revenue. The LP result is an upper bound on arbitrage profit only for the same prices and operating constraints, not on a real project's total revenue. No forecast-error model exists.
 - The midnight SOC reset understates revenue slightly (+0.65% with the same cap).
 - Degradation is not linked to cycling. There is no augmentation, replacement, residual value or tax. O&M is flat while revenue fades, so net cash flow turns negative in years 13–15 and the model has no retirement option.
 - The model is SMP arbitrage only, as a price-taker. No contract, capacity or ancillary revenue is modelled, and none should be added to this case (see `docs/market_rules.md`).
 - 2024 prices (one year, 364 days) are applied to a 15-year life.
 - Solar-scenario results rest on an unverified regression, so they are exploratory only.
-- `EXECUTIVE_SUMMARY.md` still contains pre-audit numbers (−$142.5M, $47/kWh, $156/kW-yr, "366 days", "43%", "−0.58%/−1.35%"). They are author text and have not been edited.
+- The pre-audit executive summary (−$142.5M, $47/kWh, $156/kW-yr, "366 days", "43%", "−0.58%/−1.35%") is archived unchanged at [archive/EXECUTIVE_SUMMARY_bb253a4.md](archive/EXECUTIVE_SUMMARY_bb253a4.md), with a table of which claims are superseded.
 
 ## 7. Reproduce
 

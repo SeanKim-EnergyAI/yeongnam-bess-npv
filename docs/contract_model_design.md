@@ -104,7 +104,7 @@ Excel cells were read twice: once for formulas and once for cached values. The c
 | Construction financing | ATB CAPEX applies its CFF | **Excluded** (capex placed at COD) |
 | Fixed O&M incl. augmentation | Yes (0.025 × OCC) | **Included** |
 | Charging energy | — | Excluded (not settled per notice) |
-| Transaction fee (거래수수료) | — | Excluded (rate in the operation rules, not read) |
+| Transaction fee (거래수수료) | — | Excluded. Base confirmed in the rules (discharge metered value, 별표8 7.8.1); the rate is set separately by KPX and is not confirmed for this ESS |
 | Performance deposit, late-completion penalty, price adjustment | — | Excluded (refundable / assumed not triggered) |
 | Income tax, debt costs, residual value, battery disposal | — | Excluded (scope) |
 
@@ -282,7 +282,7 @@ What this means for case B:
 | 이행률 in hours with no dispatch instruction | **Resolved** (rules 별표2 Ⅰ.18 (ii), 2026.7.24. amendment); implemented in `hourly_efr_rules` |
 | Hourly 최대전력저장량_{i,t}: declaration, testing, derating | Declaration **resolved** (bid EOSE, 별표4 6.6). Treatment of a bid below contract (degradation) and any capacity test: not found (C); contract needed |
 | Augmentation vs initial oversizing | KEC 512.1.2 and the 2025-052 부칙 read (§7a). Still open: whether the notice's "보증수명의 연장목적으로 설계 용량을 추가하지 않아야 함" covers degradation make-up (b) or same-capacity replacement (c); how added capacity enters the yearly 보증수명 evaluation; which KEC edition governs the project; the contract's equipment-change terms (contract not obtained in the public search, `market_rules.md` §7). |
-| Transaction fee | Base in the rules: discharge metered value (kWh), 별표8 7.8.1. A research memo reports a general KPX FAQ rate (거래량 × 0.1193원/kWh from 2025-09-01), not checked here and not confirmed for central-contract ESS. Not added to the model: its base is kWh, while the contract settles in kW-h, and the ESS chargeable quantity is unconfirmed. |
+| Transaction fee | Base in the rules: discharge metered value (kWh), 별표8 7.8.1. A research memo reports a general KPX FAQ rate (거래량 × 0.1193원/kWh from 2025-09-01), not checked here and not confirmed as the rate applied to central-contract ESS. Not added to the model: the rate is unconfirmed, and its kWh base must not be applied to the kW-h settlement quantity. |
 | A realistic effective payment factor f | Hourly dispatch-instruction and metering data from operating central-contract ESS (not public in this repo) |
 | Korean capex and O&M | Korean project cost data or quotes; the ATB augmentation share of O&M (the workbook gives FOM only as 0.025 × OCC, with no split) |
 | Cost definition and vintage | Whether to add a Korean connection and financing cost to OCC (the ATB US values are not Korean estimates), and how to move 2022$ to a 2029 nominal-KRW basis. These are author decisions. |

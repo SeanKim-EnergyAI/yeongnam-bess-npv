@@ -1,7 +1,16 @@
-> **이전 버전 (Previous version, commit bb253a4).** 이 문서의 수치(−$142.5M, $47/kWh,
-> $156/kW-yr, "366 days", "43%", "−0.58% / −1.35%" 등)는 감사 이전 결과이며 현재 결과가
-> 아닙니다. 최신 결과는 [docs/model_audit.md](docs/model_audit.md)와
-> [docs/technical_memo.md](docs/technical_memo.md)를 참조하세요. 본문은 수정하지 않았습니다.
+> **Archived previous version (commit bb253a4). Do not cite as current.**
+> The body below is kept unchanged as a record. Current results and wording are in
+> [README.md](../../README.md), [docs/model_audit.md](../model_audit.md) and
+> [docs/technical_memo.md](../technical_memo.md).
+>
+> | Claim in this archived text | Current status |
+> |---|---|
+> | NPV ≈ −$142.5M; break-even ~$47/kWh or ~$156/kW-yr | Superseded: −$136.2M, ~$60/kWh, ~$150/kW-yr on the 364-day per-day LP baseline (the old figure came from an infeasible heuristic on the mean day under +30% solar) |
+> | "366 daily price curves"; backtest "+43%", −$134M | Superseded: 364 complete days (2 incomplete dates excluded, not filled); per-day LP NPV −$136.2M; step-by-step bridge in `docs/model_audit.md` |
+> | "No Korean duck curve yet" | Rephrased as an observed 2024 hour-of-day price pattern; its cause is not tested |
+> | "More solar slightly raises the spread" | Exploratory only: the coefficients' code, units and sample are not verified here |
+> | "Upper-bound screen … the negative result is conservative" | Corrected: perfect foresight bounds arbitrage profit only for the same prices and operating constraints, not a real project's total revenue |
+> | Yeongnam motivation and −1.35% / −0.58% effects | Not analysed in this repository: one national SMP, no regional price or site model; the paper's estimates are not verified here |
 
 # Executive Summary — Does Battery Storage Pay Under Korea's Solar Transition?
 

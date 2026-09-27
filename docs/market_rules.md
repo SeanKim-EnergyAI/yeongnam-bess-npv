@@ -1,12 +1,22 @@
 # Market rules — 2026 mainland ESS central contract market (case B sources)
 
-All facts below were read directly from the PDFs in `docs/sources/` (local copies).
-**Source files are not in this repository.** The paths `docs/sources/…` below name where the files go when downloaded; see [docs/source_manifest.md](source_manifest.md) for download locations, versions, page mappings and SHA-256.
+All facts below were read directly from source files supplied by the author
+(upload or Google Drive) and read on 2026-09-27. **The source files are not in
+this repository.** The paths `docs/sources/…` below name where the files go when
+downloaded; see [source_manifest.md](source_manifest.md) for download locations,
+versions, page mappings and SHA-256.
 
- The user
-uploaded them to this session and they were read on 2026-09-27. Web access to
-kpx.or.kr, epsis.kpx.or.kr and atb.nlr.gov was blocked from this environment, so
-anything not in those PDFs is marked **unconfirmed**. Page references use the
+Two kinds of access are kept apart:
+
+- **Direct URL access failed.** kpx.or.kr, epsis.kpx.or.kr, atb.nlr.gov,
+  data.openei.org and law.go.kr were blocked from this environment.
+- **Supplied files were read.** The notice, the operation rules, the KEC
+  excerpts, the ATB workbook, the ATB web-text export and the ATB printouts were
+  read in full or at the pages listed in §0.
+
+Anything not in those files is marked **unconfirmed**. "Not obtained" means the
+file was not found or not reachable here; it is **not** a finding that the
+document does not exist. Page references use the
 form **p.N / PDF M**: N is the printed page number and M is the PDF page index.
 No secondary sources are cited as fact. Summaries passed on from other AI tools or news were used only as leads to check, never as sources.
 
@@ -19,7 +29,7 @@ and the ATB **Excel workbook**. All three were read by 2026-09-27; they are not 
 
 | File | Type | Pages read | Confirmed directly | Not confirmed from this file |
 |---|---|---|---|---|
-| `kpx_notice_2026-05_ess_central_contract_mainland.pdf` | KPX official notice (PDF, 34 pp.) | All 34 PDF pages. Formula pages 24, 28, 29 were also rendered as images to read the symbols. | Bid range, 송전단 6 h definition, KRW/kW-h unit, charging/discharge not settled, daily settlement and 이행률 formula, 15-yr term, fixed price, performance requirements, price adjustment, late-completion table, deposit, eligible substations, evaluation, KEC 512.1.2 quotation (§2) | 이행률 for hours with no dispatch instruction; how hourly 최대전력저장량 is set; fee rate. (Read, but **not defined in this document**.) |
+| `kpx_notice_2026-05_ess_central_contract_mainland.pdf` | KPX official notice (PDF, 34 pp.) | All 34 PDF pages. Formula pages 24, 28, 29 were also rendered as images to read the symbols. | Bid range, 송전단 6 h definition, KRW/kW-h unit, charging/discharge not settled, daily settlement and 이행률 formula, 15-yr term, fixed price, performance requirements, price adjustment, late-completion table, deposit, eligible substations, evaluation, KEC 512.1.2 quotation (§2) | 이행률 for hours with no dispatch instruction and how hourly 최대전력저장량 is set: **not defined in this document**, later found in the operation rules (§5). Fee rate. |
 | `atb2024_battery_cost_components.pdf` | ATB dashboard printout (1 p.) | 1 | "Base 60MW 240MWh", column "2023": $1,906.95/kW, $476.74/kWh; cost-component legend | Dollar-year, scenario, projection year, usable/nameplate basis, 6-hour value, workbook cell |
 | `atb2024_battery_capex_inclusions.pdf` | ATB dashboard printout (1 p.) | 1 | Items included in CAPEX (grid connection, land, battery-specific items) | Values per item |
 | `atb2024_battery_om_inclusions.pdf` | ATB dashboard printout (1 p.) | 1 | "Battery augmentation" listed under fixed O&M costs (battery-specific) | Share of O&M that is augmentation |
@@ -31,7 +41,7 @@ and the ATB **Excel workbook**. All three were read by 2026-09-27; they are not 
 | `KEC_2025-052_cover_and_addenda_excerpt.pdf` (4 pp.; user excerpt, text not edited; per the user = PDF pp.1, 1205, 1206, 1207 of `KEC_official_attachment.pdf`; printed 부칙 pp.1175–1177; SHA-256 9d72b676…) | KEC 한국전기설비규정 cover + 부칙 | All 4 pages | Revision history on the cover (제정 2018-103 … 제10차 2025-052); 801 재검토기한; every 부칙 from 2018-103 to 2025-052 (§6a) | Whether the 2025-052 부칙 continues after printed p.1177 (excerpt ends there); which provisions 2025-052 amended |
 | `docs/research_notes/2026-09-27_public_search_memo.md` | **Research memo by the author's investigator, not an official document** | All | Nothing official by itself. Used as leads (§7) | Everything it points to by URL only (kpx.or.kr is blocked here) |
 
-Summaries from other AI tools were treated as leads only. Correction notices, briefing materials and the standard contract terms remain unread in this project (see §7 for what the research memo reports about them).
+Summaries from other AI tools were treated as leads only. Correction notices, briefing materials and the standard contract terms were **not obtained** in this project. This does not mean they do not exist (see §7 for what the research memo reports).
 
 ## 1. Sources
 
@@ -43,20 +53,23 @@ Summaries from other AI tools were treated as leads only. Correction notices, br
 | **ATB cost components** | `atb2024_battery_cost_components.pdf` (1 page) | NREL ATB, capital costs by category | not printed | as above | 2026-09-27 | |
 | **ATB tech summary** | `atb2024_battery_tech_summary.pdf` (1 page) | NREL ATB, Utility-Scale Battery Storage parameter projections | "data updated: 02/26/2025 v4.109" | Financials = R&D, cost recovery period 30 years, "No Credits" | 2026-09-27 | Chart only; no numeric labels on the data points |
 
-**Not read (unconfirmed).** These are the two links named on 2026-09-27. They
-were not retried, because the hosts were already confirmed blocked from this
-environment. No file for them has been uploaded.
+**Direct links that could not be opened here (files later supplied and read).**
+These two links were named on 2026-09-27. The hosts were blocked, so the links
+were not retried. The documents themselves were then **supplied as files and
+read**: the full operation rules (2026. 7.) via Google Drive (§0, §5), and the ATB
+page as a text export plus the ATB 2024 v3 workbook (§0, §3). The table records
+what was searched for.
 
-| Needed source | Link given | What to download | Sections / search terms |
+| Source | Link given (not opened here) | What was needed | Sections / search terms |
 |---|---|---|---|
 | 전력시장운영규칙 (rules version in force for the 2026 notice) | kpx.or.kr board bid=0030, list_no=77795 | The attached rules PDF/HWP (full text, or at least 제15장 and the related 별표) | 제15장 "저탄소 전원 중앙계약시장"; 15.1.1 (중앙계약공급자); 15.2.3 (입찰자 등록); 15.2.5 (유효경쟁); 15.2.7 (계약 취소·해지); the settlement clause for "중앙계약전기저장장치"; search terms "이행률", "급전지시량", "공급가능용량", "최대전력저장량", "정산금", "거래수수료"; 별표13 (중앙급전전기저장장치 기준); 별표3 |
 | NREL ATB 2024, Utility-Scale Battery Storage | atb.nlr.gov/electricity/2024/utility-scale_battery_storage | The page itself (print to PDF), or the ATB 2024 data CSV | "Base Year", "dollar year"; "round-trip efficiency"; "augmentation"; "usable" or "energy capacity"; "Fixed O&M" definition; the 6-hour CAPEX values |
 
 Other unconfirmed sources:
 
-- Any 정정공고 (correction notice) issued after 2026-09-22. Not checked in this project; the research memo's limited search is recorded in §7.
+- Any 정정공고 (correction notice) issued after 2026-09-22. Not obtained. The research memo's limited search found none within its stated scope (§7); this is not a finding that none exists.
 - The briefing notice list_no=78169. The briefing itself is scheduled for 2026-09-30, a future event as of 2026-09-27 (§7). No slides or Q&A exist yet to read.
-- The standard contract terms (표준계약조건 / 계약서) for this notice. Not obtained (§7).
+- The standard contract terms (표준계약조건 / 계약서) for this notice. Not obtained in the public search (§7); not a finding that they are unpublished.
 - KEPCO 송배전용 전기설비 이용규정. (KEC 512.1.2 and the KEC 부칙 have since been read, §6.)
 - EPSIS: source, units and hour definition of the case-A SMP data.
 
@@ -66,8 +79,8 @@ Other unconfirmed sources:
 |---|---|---|---|---|---|
 | **Bid size** | Bids are "10MW(60MWh) 초과 100MW(600MWh) 미만", in 1 MW (6 MWh) increments. Total auctioned: 1,100 MW / 6,600 MWh. | KPX notice p.1 / PDF 3 (Ⅰ.1 비고); p.22 / PDF 24 (Ⅳ.1 note); p.13 / PDF 15 (quantity adjustment uses the same unit) | The earlier design proposed **100 MW**, which is **outside** the range: the upper bound is exclusive. | Hypothetical **50 MW / 300 MWh**. The code rejects sizes outside (10, 100) MW or off 1 MW steps. | — |
 | **6-hour, transmission-side (송전단) definition** | Quantities are "송전단기준 최대방전용량(MW) 및 최대전력저장량(MWh)". 최대 방전용량 = the 송전단 maximum discharge power that can be held "거래기간 동안 안정적인 운전 상태를 유지하면서". 최대 전력저장량 = the 송전단 energy that can be discharged for **6 hours** at 최대 방전용량 "거래기간 동안". 공급가능용량 = 최대방전용량 (kW) that must be deliverable "6시간 동안 연속으로". Maximum charging time is ≤ 7.5 h (lithium) at 최대 전력저장량. | p.1 / PDF 3; p.14 / PDF 16 (Ⅲ.5); p.22 / PDF 24 (Ⅳ.1); p.26 / PDF 28 (settlement notes) | Case A's 400 MWh is **internal** storage and 4 h. | The 송전단 deliverable energy (300,000 kWh) is the contract quantity. Internal battery energy is a separate, illustrative variable (§3). | How "거래기간 동안" is tested and enforced year by year (operation rules) |
-| **Charging cost / discharge revenue** | The bid price is a unit fixed cost "총 사업비(투자비, 운영비 등)… 공급가능용량으로 환산"; "단, 총사업비 산정시 충전비용 제외 → 정산시 충전비용 및 방전수익은 미정산되어 대금결제 미발생". Operating cost "설비 운영 및 조정, 유지보수에 관련하여 발생하는 모든 비용을 포함". | p.22 / PDF 24 (Ⅳ.3 입찰가격) | The earlier design had a "charging-cost switch" and a formula that could include charging cost. **Removed**: charging cost and discharge revenue are not settled. | No charging-cost and no SMP-revenue terms. **Case A's arbitrage profit is never added.** | Treatment of auxiliary (소내) power purchases; 거래수수료 amount |
-| **Settlement formula** | Monthly settlement. Daily settlement = **Σ_{t=1}^{24} (계약가격_i × 공급가능용량_{i,t} × 이행률_{i,t})**. 공급가능용량 = 최대전력저장량_{i,t} ÷ 6. 이행률_{i,t} = 1 − {(미이행량(충전)/급전지시량(충전))·α + (미이행량(방전)/급전지시량(방전))·(1−α)}, with α = 급전지시량(충전) / (급전지시량(충전) + 급전지시량(방전)). Each ratio is capped at 1. 미이행량 = \|급전지시량 − 계량값\|. A transaction fee is charged per the operation rules. | p.26 / PDF 28 (Ⅴ.1 정산 및 결제) | The earlier design left the unit and quantity open. | Implemented as written for one hour (`hourly_performance_rate`) and one day (`daily_settlement_krw`). The annual model uses a constant r (§4). | **이행률 for an hour with no dispatch instruction** (0/0; not defined in the notice). How **최대전력저장량_{i,t}** is determined each hour. Fee rate. |
+| **Charging cost / discharge revenue** | The bid price is a unit fixed cost "총 사업비(투자비, 운영비 등)… 공급가능용량으로 환산"; "단, 총사업비 산정시 충전비용 제외 → 정산시 충전비용 및 방전수익은 미정산되어 대금결제 미발생". Operating cost "설비 운영 및 조정, 유지보수에 관련하여 발생하는 모든 비용을 포함". | p.22 / PDF 24 (Ⅳ.3 입찰가격) | The earlier design had a "charging-cost switch" and a formula that could include charging cost. **Removed**: charging cost and discharge revenue are not settled. | No charging-cost and no SMP-revenue terms. **Case A's arbitrage profit is never added.** | Treatment of auxiliary (소내) power purchases; 거래수수료 applicable rate (base confirmed in the rules, §5) |
+| **Settlement formula** | Monthly settlement. Daily settlement = **Σ_{t=1}^{24} (계약가격_i × 공급가능용량_{i,t} × 이행률_{i,t})**. 공급가능용량 = 최대전력저장량_{i,t} ÷ 6. 이행률_{i,t} = 1 − {(미이행량(충전)/급전지시량(충전))·α + (미이행량(방전)/급전지시량(방전))·(1−α)}, with α = 급전지시량(충전) / (급전지시량(충전) + 급전지시량(방전)). Each ratio is capped at 1. 미이행량 = \|급전지시량 − 계량값\|. A transaction fee is charged per the operation rules. | p.26 / PDF 28 (Ⅴ.1 정산 및 결제) | The earlier design left the unit and quantity open. | Implemented as written for one hour (`hourly_performance_rate`) and one day (`daily_settlement_krw`). The annual model uses a constant r (§4). | Not defined in the notice but **found in the operation rules** (§5): 이행률 for an hour with no dispatch instruction (EFR case ii) and the hourly EOSE bid. Still open: treatment of EOSE bid below the contracted amount (C); applicable fee rate. |
 | **Unit 원/kW-h** | Bid price is "공급가능용량 기준 단위 고정비(원/kW-h)". | p.14 / PDF 16 (Ⅲ.5); p.22 / PDF 24 (Ⅳ.3) | — | KRW per kW of 공급가능용량 per settled hour: KRW/kW-h × kW × h = KRW. **Not** KRW per kWh discharged. | — |
 | **Contract term** | 계약기간 = 사업 준비기간 + 거래기간 (15 years). 거래기간 = 15 years including the COD day. Completion deadline February 2029. The contract is signed within 1 month of the generation business licence. | p.25 / PDF 27 (Ⅴ.1) | The earlier design had "~15 yr, unverified". | 15 settlement years from COD. Capex at year 0 = COD; no construction-period cash flows. | — |
 | **Price fixed, no indexation** | 계약가격 = the bid price, "계약기간 동안 불변(물가상승률 등 인플레이션 영향 미 고려)". "고정계약 방식". | p.25 / PDF 27 (Ⅴ.1) | Real vs nominal was undefined. | The model runs in **nominal KRW**: flat nominal payment, 7% treated as a nominal rate. O&M escalation defaults to 0% (stated omission). | — |
@@ -77,7 +90,7 @@ Other unconfirmed sources:
 | **Contract price adjustment** | Triggers: 자기자본비율 below 15% at completion; 보증수명 or 운전효율 falling below the score used at bid ("연도별 도래기간"); 신용등급 on transfer; failure of equipment requirements. Adjusted price = 최저 입찰가격 × 50 / (기존 총평가점수(가격+비가격) − 변경된 비가격평가점수). The original price is restored if 보증수명 or 운전효율 recover. | p.26 / PDF 28 (Ⅴ.1 계약가격 조정) | — | **Not modelled.** It needs the lowest bid price and scores, which are unknown. Base case assumes no trigger. | — |
 | **Late completion** | Delay N ≤ 30 days: trading period stays 15 years; for the first N days the price is 낙찰계약가격 × (15년 − N일) / 거래기간, and the full price applies afterwards. N > 30 days: trading period becomes 15 years − N days (deducted at the end), at the full price. N > 2 years: contract termination. | p.27 / PDF 29 (Ⅴ.2 준공지연 페널티 table) | — | **Not modelled** (on-time COD assumed). | — |
 | **Performance deposit** | 입찰가격 × 1년 충·방전량 (383 cycles × contract quantity) × 10%. Paid at contract and refunded within 7 business days after COD. | p.29 / PDF 31 (Ⅵ.1) | — | **Not modelled**: refundable, and the timing effect is small. Note the notice multiplies a KRW/kW-h price by an energy quantity here. The model does not reinterpret that. | — |
-| **Location and grid** | Connection is limited to KEPCO 계통관리변전소 / switching stations and substations with recognised ESS need, listed by region. Listed regions: 전남·광주, 전북, 대전·세종·충남 일부, 충북 일부, 강원 일부, 경북 일부 (e.g. 신영주, 안동, 영주, 울진, 의성, 상주). 22.9 kV requires a dedicated line. Connection-equipment costs must be considered. Meters are installed at both 송전단 and 발전단. | p.1 / PDF 3; p.10–11 / PDF 12–13 (Ⅱ.3) | Case A is labelled "Yeongnam". Among Yeongnam provinces, **only some 경북 substations** appear in the list; **no 경남, 부산, 대구 or 울산** substations do. | Case B has no site. ATB CAPEX includes grid-connection items (§3), but the actual Korean connection cost is unknown. | Eligibility of any specific site |
+| **Location and grid** | Connection is limited to KEPCO 계통관리변전소 / switching stations and substations with recognised ESS need, listed by region. Listed regions: 전남·광주, 전북, 대전·세종·충남 일부, 충북 일부, 강원 일부, 경북 일부 (e.g. 신영주, 안동, 영주, 울진, 의성, 상주). 22.9 kV requires a dedicated line. Connection-equipment costs must be considered. Meters are installed at both 송전단 and 발전단. | p.1 / PDF 3; p.10–11 / PDF 12–13 (Ⅱ.3) | The repository name refers to Yeongnam; case A models no site or regional price. Among Yeongnam provinces, **only some 경북 substations** appear in the list; **no 경남, 부산, 대구 or 울산** substations do. | Case B has no site. ATB CAPEX includes grid-connection items (§3), but the actual Korean connection cost is unknown. | Eligibility of any specific site |
 | **Parallel SMP arbitrage** | Charging cost and discharge revenue are not settled (p.22 / PDF 24). "타 제도와 이중 참여 불가"; equipment traded in RPS or other schemes or subsidised cannot bid (p.5 / PDF 7). After the contract ends, no contract payment or 용량요금 (if in the spot market) is paid (p.1 / PDF 3). | as cited | — | **A and B are separate cases.** No arbitrage in B. | Any rule in the operation rules allowing energy trading during the contract |
 | **Evaluation** | Price 50 points: [최저 입찰가격 ÷ 해당 입찰가격] × 50. Non-price 50 points. The cap price (상한가격) is **not disclosed**; it is "표준 ESS 총괄원가 기반 균등화원가(LCOS)". | p.13–14 / PDF 15–16; p.30 / PDF 32 | — | Win probability and the cap price are **not modelled**. The break-even price is not compared with any award price. | Cap price; award prices |
 | **After contract** | No payment. Decommissioning requires domestic disposal of used batteries, with a separate contract 1 year before the end. | p.1 / PDF 3 | — | No residual value and no decommissioning cost (stated omission). | Disposal cost |
@@ -127,7 +140,7 @@ pages are in the excerpt PDF. Classification:
 | Hourly capacity term (공급가능용량 / 방전가능전력량) | A | The supplier **bids**, for each of the 24 hours: 공급가능용량 = 송전단 hourly maximum discharge (MW), which "must match the approved maintenance plan"; 방전가능전력량 (EOSE) = 송전단 energy deliverable over the maximum operating time (MWh), which cannot be bid when 공급가능용량 = 0; and 소내전력량. EMOT = the notice's maximum operating time. Changes are allowed until 17:30 the day before, except for force majeure or a serious failure. | 별표4 6.6.1–6.6.4, 588–589 / 606–607; 별표1 EOSE/EMOT, 406–407 / 424–425; forms 별지 31-10, 33-9 |
 | Outages and maintenance | A (mechanism) / B (detail) | Planned maintenance must be reflected in the hourly bid capacity, and EOSE cannot be bid when capacity is 0, so maintenance hours lower EOSE and therefore payment. The general pre-settlement adjustment for generators that fail to re-bid (별표8 7.3.2.1) is **not stated** to apply to 중앙계약 ESS. | 별표4 6.6.2.1, 6.6.3.2; 별표8 7.3.2.1, 631 / 649 |
 | Capacity loss from degradation vs the contracted amount | C | No clause found that states how a bid EOSE below the contracted 최대전력저장량 is treated, beyond the formula scaling payment by EOSE. Searched "열화", "정격용량", "성능시험" and "방전가능전력량" on 중앙계약 pages; reviewed 제15장, 별표2 Ⅰ.18, 별표4 6.6 and 별표9 7.4. The notice's 보증수명 price adjustment (notice p.26 / PDF 28) is a separate mechanism. | — |
-| Transaction fee | A (base) / B (rate) | The fee = each member's traded quantity × a rate **"전력거래소가 별도로 정하는"**; for 중앙계약 ESS the base is the **discharge metered value**. Rounding rules for the settlement amounts are also specified. | 별표8 7.8.1, 634 / 652; 7.1.4, 7.1.15, 629–630 / 647–648 |
+| Transaction fee | A (base) / B (rate) | The fee = each member's traded quantity × a rate **"전력거래소가 별도로 정하는"**; for 중앙계약 ESS the base is the **discharge metered value** (confirmed). The rate applicable to this ESS is not confirmed. Rounding rules for the settlement amounts are also specified. | 별표8 7.8.1, 634 / 652; 7.1.4, 7.1.15, 629–630 / 647–648 |
 | Operating cycle | A | 1 운전주기 = cumulative discharge equal to the contracted 최대전력저장량; the day-ahead schedule is constrained to 1 cycle/day, or up to 2 cycles/day if the system needs it. | 별표9 5.14, 652 / 670; 7.4, 657 / 675 |
 
 **Notice vs rules on 이행률.**
@@ -238,5 +251,5 @@ The memo is dated 2026-09-27 and labels itself an investigation memo, not an off
 | Standard contract terms | kchps.kmos.kr (저탄소 중앙계약 플랫폼) | A complete contract file for the 2026 mainland ESS market was **not obtained in this public search**; the platform could not be accessed. The memo says non-publication was not confirmed. | "이번 공개 검색에서 원문 미확보". Not "비공개". |
 | 정정공고 | KPX 공지사항 board bid=0042 | No correction for the 2026 mainland notice among the posts dated 2026-09-22~23 on **page 1** of the board, nor in a public search, as of 2026-09-27. | Search scope and date recorded. **No claim that no correction exists on any platform.** |
 | 설명회 | Board post list_no=78169 | Scheduled 2026-09-30 14:00–15:30; the attachment is a 개최계획(안). | A **future event** as of 2026-09-27. The plan is not cited as slides or Q&A. |
-| 거래수수료 | KPX FAQ board bid=0047, "전력거래수수료는 무엇입니까?" | General rate: 거래량 × 0.1193원/kWh from 2025-09-01. The memo says the chargeable quantity for central-contract ESS was not confirmed. | A **general fee rate**, not confirmed for this ESS. Rules 별표8 7.8.1 names discharge metered values (kWh) as the base; the contract settles in kW-h (capacity × hours). The two units are not interchangeable. **Not added to the model; no size claim is made without a calculation on a confirmed base.** |
+| 거래수수료 | KPX FAQ board bid=0047, "전력거래수수료는 무엇입니까?" | General rate: 거래량 × 0.1193원/kWh from 2025-09-01. The memo says the chargeable quantity for central-contract ESS was not confirmed. | A **general fee rate**, not confirmed as the rate applied to this ESS. The **base** is confirmed separately: rules 별표8 7.8.1 names discharge metered values (kWh); the contract settles in kW-h (capacity × hours). The two units are not interchangeable. **Not added to the model; no size claim is made without a calculation on a confirmed base.** |
 | Draft inquiry | Channel: the platform's inquiry channel (kchps.kmos.kr); the department contact is given in the briefing post (list_no=78169) | Unsent draft. | Not sent from this project. |
