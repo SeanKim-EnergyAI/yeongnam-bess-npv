@@ -10,6 +10,7 @@
 > | "No Korean duck curve yet" | Rephrased as an observed 2024 hour-of-day price pattern; its cause is not tested |
 > | "More solar slightly raises the spread" | Exploratory only: the coefficients' code, units and sample are not verified here |
 > | "Upper-bound screen … the negative result is conservative" | Corrected: perfect foresight bounds arbitrage profit only for the same prices and operating constraints, not a real project's total revenue |
+> | "working paper" / "my paper" | Corrected: the upstream study is a course project for *Financial Analysis for SMEs* (Soongsil University), per the author |
 > | Yeongnam motivation and −1.35% / −0.58% effects | Not analysed in this repository: one national SMP, no regional price or site model; the paper's estimates are not verified here |
 
 # Executive Summary — Does Battery Storage Pay Under Korea's Solar Transition?

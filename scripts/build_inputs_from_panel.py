@@ -1,8 +1,8 @@
 """Build the model's real inputs from the Phase 1/2 research files.
 
-Reads the working-paper panel and the hourly HTE estimates, then writes three
+Reads the course-project panel and the hourly HTE estimates, then writes three
 small hour-of-day CSVs into data/. Only these aggregates live in this repo; the
-raw 140k-row panel stays in the separate research project.
+raw 140k-row panel stays with the course project and is not in this repo.
 
     python3 scripts/build_inputs_from_panel.py \
         --panel "~/Desktop/korea_iv_project/Claude V4/panel_v4_main.csv" \

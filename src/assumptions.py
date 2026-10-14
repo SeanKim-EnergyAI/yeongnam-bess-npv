@@ -23,7 +23,7 @@ def get_assumptions() -> dict:
         # Annual revenue = mean daily LP profit x this. Assumes outage days are
         # average days; it is an availability assumption, not a 2024 observation.
         "operating_days_per_year": 350,   # ~15 days/yr reserved for maintenance
-        # Applied as a revenue haircut (1-deg)^(t-1); the dispatch LP itself is not
+        # Applied to the annual arbitrage margin as (1-deg)^(t-1); the dispatch LP is not
         # re-solved with a smaller SOC bound, and no augmentation/replacement capex.
         "annual_degradation": 0.02,       # usable-capacity fade per year
 

@@ -11,7 +11,7 @@ prices, grid constraints or sites.
 | Question | Under observed 2024 SMP and stated cost, operating and finance assumptions, does a 100 MW / 4 h battery recover its capex from price-taker arbitrage alone? | Under the settlement structure of KPX notice 제2026-05호 (2026 mainland ESS central contract market), what fixed contract price would give NPV = 0 for a hypothetical 50 MW / 300 MWh (송전단, 6 h) plant, given stated cost and payment assumptions? |
 | Method | Per-day LP dispatch on the **364 complete days** of 2024 hourly SMP (a diagnostic sample, not a full calendar year); perfect foresight within each day; SOC empty at midnight; 1 internal cycle/day; mean day × 350 operating days; 15-year cash flows at 7% | Annual cash flows from the notice's settlement structure and the operation rules' hourly EFR form; cost from the ATB 2024 v3 6-hour OCC (US 2022$) at an assumed exchange rate; break-even price solved and re-substituted |
 | Result | NPV ≈ −$136.2M under these assumptions | Break-even ≈ 55.69 KRW/kW-h ⚠ **conditional** |
-| Main limits | One historical year repeated; perfect foresight; revenue haircut for degradation; 24 missing hours unexplained; discount-rate basis not reconciled with the price basis (see Limitations) | Conditional on the cost basis (US 2022$ OCC, no Korean connection/financing cost), the payment assumption (contracted EOSE, hypothetical factor f) and the capacity-maintenance method (contract conformity unconfirmed). Not an actual biddable project and not an assessment of Korean BESS profitability in general |
+| Main limits | One historical year repeated; perfect foresight; degradation applied as a 2%/yr cut to the arbitrage margin; 24 missing hours unexplained; discount-rate basis not reconciled with the price basis (see Limitations) | Conditional on the cost basis (US 2022$ OCC, no Korean connection/financing cost), the payment assumption (contracted EOSE, hypothetical factor f) and the capacity-maintenance method (contract conformity unconfirmed). Not an actual biddable project and not an assessment of Korean BESS profitability in general |
 
 A and B differ in size, duration, period, revenue mechanism and cost basis all
 at once. The gap between them is **not a causal effect of policy**, and B does
@@ -140,7 +140,7 @@ review memo is [docs/technical_memo.md](docs/technical_memo.md); a 1-page note i
 
 ## Exploratory: solar-coefficient scenario (not part of the baseline)
 
-This section depends on hourly coefficients from a separate working paper. Their
+This section depends on hourly coefficients from a course project for *Financial Analysis for SMEs* (Soongsil University). Their
 estimation code, units and sample are **not in this repository** and have not
 been verified here (see [docs/model_audit.md](docs/model_audit.md), D1–D4). The
 hourly vector's mean (+0.004) also disagrees in sign with the stated average
@@ -184,7 +184,7 @@ scenario_SMP[h] = mean_SMP[h] * (1 + solar_generation_growth) ** elasticity[h]
 
 | Module | Responsibility |
 |---|---|
-| `scripts/build_inputs_from_panel.py` | Derive real hourly inputs from the research panel |
+| `scripts/build_inputs_from_panel.py` | Derive hourly inputs from the course-project panel (panel not in this repo) |
 | `src/assumptions.py`    | All inputs in one place, units in the key names |
 | `src/price_scenario.py` | Reshape baseline SMP via hourly elasticities |
 | `src/data_checks.py`    | Coverage report (dates, hours per date, duplicates, zero prices); keep complete days |
@@ -231,11 +231,13 @@ python3 scripts/build_inputs_from_panel.py \
 | `data/baseline_smp_hourly.csv` | National hour-of-day mean SMP, 2024 mainland panel (N=140,138) |
 | `data/solar_profile_hourly.csv` | National hour-of-day mean solar generation, same panel |
 | `data/elasticities.csv` | Hourly log(SMP)~log(Solar) IV coefficients (Phase 2 HTE) |
-| `data/smp_2024_hourly.csv` | National hourly SMP, 2024, from the same panel (8,760 rows over 366 dates: 364 complete days; 2024-01-01 lacks hour 24 and 2024-12-31 has only hour 24; 6 hours at 0 KRW/kWh) |
+| `data/smp_2024_hourly.csv` | National hourly SMP, 2024, from the same panel; the author reports the panel's SMP comes from public KPX data (8,760 rows over 366 dates: 364 complete days; 2024-01-01 lacks hour 24 and 2024-12-31 has only hour 24; 6 hours at 0 KRW/kWh) |
 
-Only these small aggregates live here; the raw panel stays in the research repo.
-Hour 1–24 is assumed hour-ending KST (hour 24 = 23:00–24:00); this and the
-missing-hour cause are unverified without the raw file (`outputs/data_validation.csv`).
+Only these small aggregates live here; the raw panel stays with the course project
+and is not in this repository. The original KPX export is therefore not checked
+here: the source file, the hour convention (hour 1–24 is assumed hour-ending KST,
+hour 24 = 23:00–24:00) and the missing-hour cause are unverified
+(`outputs/data_validation.csv`).
 The one literature-based input is battery capex (~$350/kWh, NREL ATB 2024 /
 Lazard LCOS midpoint) in `assumptions.py` — and the break-even table shows the
 conclusion holds across the full $300–400/kWh range.
@@ -272,9 +274,11 @@ See [docs/model_audit.md](docs/model_audit.md) for evidence and open items.
 
 *Finance*
 - One historical year repeated for 15 years: a what-if, not a forecast.
-- Annual revenue = mean daily LP profit × 350 operating days; the 364-day
-  actual-period sum is $3.63M vs $3.49M.
-- 2%/yr degradation applied as a revenue haircut, not tied to cycling; no
+- Annual margin = mean daily LP margin × 350 operating days ($3.49M). The model
+  result summed over the 364 observed days is $3.63M.
+- 2%/yr degradation applied to the annual arbitrage margin (discharge revenue −
+  charging cost; `src/cashflow.py`), not tied to cycling; the LP is not re-solved
+  with a smaller battery; no
   augmentation/replacement capex, residual value or tax. With flat O&M, net cash
   flow turns negative in years 13–15 and there is no early-retirement option.
 - The 7% discount rate is not labelled real or nominal, and the price basis is
@@ -295,11 +299,35 @@ See [docs/model_audit.md](docs/model_audit.md) for evidence and open items.
 - Capex is literature-based (NREL ATB 2024 / Lazard, ~$350/kWh; exact table not
   verified here); break-even capex is ~$60/kWh.
 
+*Upstream estimate (the course project's regression; used only in the exploratory scenario)*
+- Korea's mainland SMP is a **single national price**. The input script checks
+  that the panel's SMP is identical across the 16 regions for every (date, hour)
+  (`assert_same_within_date_hour` in `scripts/build_inputs_from_panel.py`), so the
+  panel repeats one price per hour. Independent price observations are therefore
+  closer to the number of hours in 2024 (~8,800) than to the panel size (140,138).
+- The author reports standard errors clustered by region (16 clusters); the
+  regression code is not in this repo. With a repeated national price, this likely
+  overstates precision. A national hourly time series with time-based inference
+  would be a cleaner design.
+- Regional estimates (e.g. Yeongnam) are hard to read causally: irradiance moves
+  together across regions, so one region's irradiance also reaches the price
+  through other regions' solar output.
+- Neither case A's baseline nor case B uses these coefficients.
+
+## How this was built
+
+I chose the question, collected the public data, and set the direction of each
+analysis. The code and estimation were written with AI coding assistants (ChatGPT,
+Claude); I reviewed and interpreted the results. On this branch, the audit of
+case A, case B and their documentation were produced with Claude Code; the commit
+metadata records this. Known issues are listed under Limitations and in
+[docs/model_audit.md](docs/model_audit.md).
+
 ## Context
 
-The 2024 hourly inputs come from the data panel of a separate working paper,
+The 2024 hourly inputs come from the data panel of a course project for *Financial Analysis for SMEs* (Soongsil University),
 *"Does Solar Generation Lower the Korean SMP?"* (IV / 2SLS, 2024 hourly panel, 16
-mainland regions). That paper's coefficients (reported −0.0058 national and
-−0.0135 Yeongnam; read as log-log elasticities, −0.0058% and −0.0135% SMP per +1%
-solar) enter **only** the exploratory scenario above. Their estimation is not
-reproduced or verified in this repository.
+mainland regions). Its coefficients (reported −0.0058 national and −0.0135
+Yeongnam; read as log-log elasticities, −0.0058% and −0.0135% SMP per +1% solar;
+the unit is not verified here) enter **only** the exploratory scenario above.
+Their estimation is not reproduced or verified in this repository.

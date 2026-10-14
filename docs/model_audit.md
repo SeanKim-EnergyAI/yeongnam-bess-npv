@@ -67,7 +67,7 @@ Exploratory only: data/baseline_smp_hourly.csv (hour-of-day mean) × src/price_s
 | `run_audit.py` | Cap-definition, engine-comparison and NPV-bridge tables | LP, heuristic |
 | `run_analytics.py` | Daily distribution figure, NPV = 0 frontier figure | LP per day |
 | `run_phase4.py` / `run_phase3.py` | Representative day; exploratory solar scenarios | LP (+ heuristic for comparison) |
-| `scripts/build_inputs_from_panel.py` | Rebuilds `data/*.csv` from the research panel. **Not run: the panel is not in the repo.** | — |
+| `scripts/build_inputs_from_panel.py` | Rebuilds `data/*.csv` from the course-project panel. **Not run: the panel is not in the repo.** | — |
 
 `src/arbitrage.py` (the heuristic) is no longer on the baseline path. It is kept
 only to reproduce the legacy numbers.
@@ -247,7 +247,7 @@ It is a property of averaging, not a new empirical finding.
 | Annualisation | daily mean × 350 operating days (assumes outage days are average days) | analysis-period sum ($3.634M over 364 days) |
 | Incomplete dates | excluded | never filled |
 | Zero-price hours | kept as observed | — |
-| Degradation | 2%/yr revenue haircut; LP not re-solved; not linked to cycling | cycle-based fade and/or augmentation |
+| Degradation | 2%/yr cut to the annual arbitrage margin (`src/cashflow.py`); LP not re-solved; not linked to cycling | cycle-based fade and/or augmentation |
 | Future prices | 2024 prices repeated for 15 years (a what-if, not a forecast) | price scenarios |
 | Discount rate | 7%, real vs nominal unstated; prices and O&M flat in 2024 KRW. Consistency between the rate basis and the price basis is not checked (open) | a real rate with constant-KRW flows, or a nominal rate with escalated flows |
 

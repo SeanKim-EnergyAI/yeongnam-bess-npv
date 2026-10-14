@@ -29,7 +29,7 @@ def load_solar_profile(csv_path: str) -> pd.Series:
 def load_elasticities(csv_path: str) -> pd.Series:
     """Load the 24-hour log(SMP)~log(Solar) IV coefficient vector (hour, elasticity).
 
-    Built from the working paper's hourly HTE estimates by
+    Built from the course project's hourly HTE estimates by
     scripts/build_inputs_from_panel.py.
     """
     df = pd.read_csv(csv_path)
