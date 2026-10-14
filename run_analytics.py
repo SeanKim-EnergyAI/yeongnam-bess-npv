@@ -1,8 +1,11 @@
 """Phase 3.5 - Full-year arbitrage distribution and a break-even decision map.
 
 Two questions a business reader asks:
-  1. The headline used an *average* day -- does real daily volatility change it?
-  2. What cost / policy-support combination would actually make this investable?
+  1. How does the LP on each observed day compare with the average-day shortcut?
+  2. What capex / extra-revenue combination would bring NPV to zero?
+
+Both use the baseline engine: LP dispatch per complete day (src/daily_arbitrage.py).
+Incomplete dates (2024-01-01, 2024-12-31) are excluded, not filled.
 
 Run from the project root:
     python3 run_analytics.py
@@ -17,8 +20,9 @@ import numpy as np
 
 from src.assumptions import get_assumptions
 from src.price_scenario import load_baseline_smp
-from src.arbitrage import daily_arbitrage_revenue
-from src.daily_arbitrage import load_hourly_series, daily_arbitrage_series, monthly_mean
+from src.optimize_dispatch import optimize_daily_dispatch
+from src.daily_arbitrage import (load_hourly_series, daily_arbitrage_series,
+                                 daily_lp_series, monthly_mean)
 from src.cashflow import build_cashflows
 from src.valuation import summarize
 from src.breakeven import annuity_factor
@@ -42,7 +46,7 @@ def plot_distribution(daily_usd, monthly_usd) -> str:
     ax1.axvline(daily_usd.median(), color="tab:red", linestyle=":",
                 label=f"median ${daily_usd.median():,.0f}")
     ax1.set_xlabel("Daily arbitrage profit (USD)"); ax1.set_ylabel("Days")
-    ax1.set_title("Distribution of daily arbitrage (2024)"); ax1.legend()
+    ax1.set_title("Daily LP arbitrage, 2024 complete days"); ax1.legend()
 
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -79,7 +83,7 @@ def plot_breakeven_frontier(daily_net_krw: float, a: dict) -> str:
     fig.colorbar(cf, label="NPV (M USD)")
     ax.set_xlabel("Battery capex ($/kWh)")
     ax.set_ylabel("Stacked revenue ($/kW-yr)")
-    ax.set_title("Break-even frontier: when does the BESS become investable?")
+    ax.set_title("NPV = 0 frontier (illustrative; LP baseline revenue)")
     path = os.path.join(OUT_DIR, "analytics_breakeven_frontier.png")
     fig.tight_layout(); fig.savefig(path, dpi=120); plt.close(fig)
     return path
@@ -88,16 +92,17 @@ def plot_breakeven_frontier(daily_net_krw: float, a: dict) -> str:
 def main() -> None:
     a = get_assumptions()
     hourly = load_hourly_series(SERIES_PATH)
-    daily = daily_arbitrage_series(hourly, a)
+    daily = daily_lp_series(hourly, a)["daily_net_krw"]
+    heuristic = daily_arbitrage_series(hourly, a)          # legacy, comparison only
     daily_usd = daily / KRW_PER_USD
 
-    # Representative-day dispatch (Phase 3 basis) vs the mean of real daily dispatch
-    rep_daily = daily_arbitrage_revenue(load_baseline_smp(BASE_PATH), a)["net_revenue_krw"]
+    # Representative-day LP vs the mean of per-day LP (same engine, same days' prices)
+    rep_daily = optimize_daily_dispatch(load_baseline_smp(BASE_PATH), a)["net_revenue_krw"]
     real_mean = daily.mean()
     uplift = (real_mean / rep_daily - 1) * 100
 
     print("=" * 64)
-    print("PHASE 3.5 - Full-year arbitrage (observed 2024 SMP, %d days)" % len(daily))
+    print("PHASE 3.5 - Per-day LP arbitrage (observed 2024 SMP, %d complete days)" % len(daily))
     print("=" * 64)
     print("Daily arbitrage profit (USD):")
     print(f"  mean ${daily_usd.mean():,.0f} | median ${daily_usd.median():,.0f} | "
@@ -105,13 +110,14 @@ def main() -> None:
     print(f"  P10 ${daily_usd.quantile(.10):,.0f} | P90 ${daily_usd.quantile(.90):,.0f} | "
           f"min ${daily_usd.min():,.0f} | max ${daily_usd.max():,.0f}")
     print("-" * 64)
-    print(f"Representative-day dispatch : ${rep_daily/KRW_PER_USD:,.0f}/day")
-    print(f"Real per-day dispatch (mean): ${real_mean/KRW_PER_USD:,.0f}/day  ({uplift:+.1f}%)")
-    print(f"  -> averaging the curve UNDERSTATED daily value by {uplift:.0f}%")
+    print(f"Representative-day LP       : ${rep_daily/KRW_PER_USD:,.0f}/day")
+    print(f"Per-day LP (mean)           : ${real_mean/KRW_PER_USD:,.0f}/day  ({uplift:+.1f}%)")
+    print(f"Legacy heuristic (mean)     : ${heuristic.mean()/KRW_PER_USD:,.0f}/day  "
+          f"(infeasible; {(heuristic < 0).sum()} loss days vs LP {(daily < 0).sum()})")
+    print(f"LP no-trade days            : {(daily.abs() < 1).sum()}")
     print("-" * 64)
     print(f"NPV @ representative day : ${npv_krw(rep_daily, a)/KRW_PER_USD/1e6:>8,.1f}M")
-    print(f"NPV @ real daily mean    : ${npv_krw(real_mean, a)/KRW_PER_USD/1e6:>8,.1f}M")
-    print("  -> conclusion unchanged: arbitrage alone is deeply negative")
+    print(f"NPV @ per-day LP mean    : ${npv_krw(real_mean, a)/KRW_PER_USD/1e6:>8,.1f}M  (baseline)")
 
     mm = monthly_mean(daily) / KRW_PER_USD
     print(f"\nSeasonality: best month {int(mm.idxmax())} (${mm.max():,.0f}/day), "

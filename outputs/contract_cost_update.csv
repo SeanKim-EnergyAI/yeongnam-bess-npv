@@ -1,0 +1,4 @@
+case,atb_cell,atb_occ_usd_per_kw,hours_in_atb_value,capex_usd_per_kwh_2022usd,capex_krw_bn,fixed_om_krw_bn_per_yr,breakeven_price_krw_per_kw_h,change_vs_prior_pct,held_constant,status
+PRIOR (reproduction): 4-h OCC applied to 6-h asset,H108,1906.96,4,476.74,193.08,4.827,59.4203,0.0,"f=1.00, 8,760 h, 7% nominal, FX 1,350, 15 yr","CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+"COST UPDATE (new base): 6-h OCC, same 2023 column",H111,2680.7986,6,446.7998,180.954,4.524,55.6886,-6.28,"f=1.00, 8,760 h, 7% nominal, FX 1,350, 15 yr","CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"
+"SEPARATE scenario: 6-h OCC, 2029 Moderate projection",N111,1867.5499,6,311.2583,126.06,3.151,38.7949,-34.71,"f=1.00, 8,760 h, 7% nominal, FX 1,350, 15 yr","CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)"

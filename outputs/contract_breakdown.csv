@@ -1,0 +1,23 @@
+item,value,unit,derivation / source,code
+Contract power,50.0,MW,"hypothetical (bid range 10-100 MW, notice p.22/PDF 24)",src/contract_case.py:get_contract_assumptions
+Contract power,50000.0,kW,"x 1,000 (MW -> kW)",src/contract_case.py:get_contract_assumptions
+Deliverable energy (송전단),300.0,MWh,P x 6 h,src/contract_case.py:deliverable_energy_kwh
+Deliverable energy (송전단),300000.0,kWh,"x 1,000 (MWh -> kWh)",src/contract_case.py:deliverable_energy_kwh
+"Internal nameplate (illustrative, NOT in cost)",323498.31961031526,kWh,E / (sqrt(0.86) x (1-0)) / 1.0,src/contract_case.py:internal_nameplate_kwh
+CAPEX unit cost,446.79977452,USD/kWh (2022$),"ATB 2024 v3 workbook, 'Utility-Scale Battery Storage'!H111 / 6 h: 6Hr Moderate, 2023 (same in all scenarios in 2023) (OCC; excl. GCC and construction finance)",src/contract_case.py:get_contract_assumptions
+FX,1350.0,KRW/USD,"research assumption, applied once",src/contract_case.py:get_contract_assumptions
+OCC-based initial investment (not total project cost),180953908680.6,KRW,"446.7998 x 1,350 x 300,000",src/contract_case.py:capex_krw
+Annual fixed O&M,4523847717.015,KRW/yr,0.025 x OCC-based CAPEX (ATB formula H125/H128); INCLUDES augmentation,src/contract_case.py:annual_fixed_om_krw
+Trading period,15.0,yr,notice p.25/PDF 27,src/contract_case.py:get_contract_assumptions
+Discount rate,0.07,-,"research assumption, NOMINAL (price fixed, no indexation)",src/contract_case.py:get_contract_assumptions
+Annuity factor sum DF_1..15,9.107914005109144,-,sum 1.07^-y,src/contract_case.py:build_contract_cashflows
+Settled hours per year,8760.0,h,annual simplification (24 h x 365 d); NOT a confirmed rule,src/contract_case.py:settled_kw_hours_per_year
+Supply capacity,50000.0,kW,"300,000 kWh / 6, held constant (not SOC)",src/contract_case.py:supply_capacity_kw
+Effective payment factor f,1.0,-,hypothetical; not the notice 이행률,src/contract_case.py:get_contract_assumptions
+Settled quantity per year Q x f,438000000.0,kW-h/yr,"50,000 kW x 8,760 h x f",src/contract_case.py:settled_kw_hours_per_year
+PV of costs (CAPEX + PV O&M),222156724659.38196,KRW,180.954 bn + 4.524 bn x 9.1079,src/contract_case.py:breakeven_contract_price
+PV of settled quantity,3989266334.2378054,kW-h,"438,000,000 x 9.1079",src/contract_case.py:breakeven_contract_price
+Break-even price p* = PV costs / PV quantity,55.6886169150267,KRW/kW-h,"CONDITIONAL (rules-based settlement; assumed EOSE, f and US 2022$ cost)",src/contract_case.py:breakeven_contract_price
+Annual contract payment at p*,24391614208.781693,KRW/yr,p* x Q x f,src/contract_case.py:build_contract_cashflows
+Annual net cash flow at p*,19867766491.766693,KRW/yr,payment - O&M,src/contract_case.py:build_contract_cashflows
+NPV at p* (re-substitution),0.0,KRW,should be ~0,src/contract_case.py:contract_npv

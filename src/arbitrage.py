@@ -1,9 +1,14 @@
-"""Daily price-arbitrage revenue for a charge/discharge battery.
+"""LEGACY heuristic daily arbitrage -- kept only as a comparison to the LP.
 
 Dispatch rule: each day, charge during the cheapest `duration_h` hours and
 discharge during the most expensive `duration_h` hours. Round-trip losses
 mean we must buy MORE energy than we sell, which is why charge energy is
 divided by the efficiency.
+
+Not a feasible schedule: it ignores hour order (may "discharge" before it
+charges), draws energy/rte = 465 MWh in 4 h (116 MW > 100 MW limit), and always
+trades even when the spread does not cover losses. The baseline uses
+src/optimize_dispatch.py instead.
 """
 
 import pandas as pd

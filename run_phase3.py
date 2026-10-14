@@ -1,10 +1,13 @@
-"""Phase 3 - Yeongnam 100MW BESS NPV.
+"""Phase 3 - representative-day NPV diagnostic + exploratory solar scenarios.
 
 Pipeline:
-    real 2024 SMP + hourly IV elasticities -> price scenario
-    -> daily arbitrage -> cash flows -> NPV / IRR
+    2024 hour-of-day mean SMP (+ optional solar scenario via hourly coefficients)
+    -> LP dispatch on that one average day -> x operating days -> cash flows -> NPV
 
-plus break-even levers and elasticity-scenario robustness.
+This is NOT the headline: the baseline (run_baseline.py) dispatches every
+observed complete day. The average day understates value because averaging
+flattens daily spreads. Solar/elasticity runs are exploratory sensitivities
+(the underlying regression is not in this repo).
 
 Run from the project root:
     python3 run_phase3.py
@@ -23,7 +26,7 @@ import pandas as pd
 from src.assumptions import get_assumptions
 from src.price_scenario import (load_baseline_smp, load_elasticities,
                                 load_solar_profile, apply_solar_scenario)
-from src.arbitrage import daily_arbitrage_revenue
+from src.optimize_dispatch import optimize_daily_dispatch
 from src.cashflow import build_cashflows
 from src.valuation import summarize
 from src.breakeven import (breakeven_capex_per_kwh,
@@ -50,7 +53,7 @@ def run_pipeline(assumptions: dict, elasticities=None) -> dict:
         elasticities = load_elasticities(ELAST_PATH)
     price = apply_solar_scenario(baseline, elasticities,
                                  assumptions["solar_growth_pct"])
-    arbitrage = daily_arbitrage_revenue(price["scenario_smp"], assumptions)
+    arbitrage = optimize_daily_dispatch(price["scenario_smp"], assumptions)
     cashflows = build_cashflows(arbitrage["net_revenue_krw"], assumptions)
     metrics = summarize(cashflows, assumptions["discount_rate"])
     return {"price": price, "arbitrage": arbitrage,
@@ -61,17 +64,18 @@ def print_summary(assumptions: dict, result: dict) -> None:
     arb, m = result["arbitrage"], result["metrics"]
     base = result["price"]["baseline_smp"]
     print("=" * 64)
-    print("PHASE 3 - Yeongnam 100MW BESS  |  arbitrage NPV (real 2024 data)")
+    print("PHASE 3 - representative-day diagnostic (LP on 2024 hour-of-day mean)")
     print("=" * 64)
     print(f"System            : {assumptions['power_mw']} MW / "
           f"{assumptions['duration_h']} h  = {assumptions['energy_mwh']} MWh")
     print(f"Baseline SMP      : mean {base.mean():.1f} KRW/kWh "
           f"(min h{int(base.idxmin())}={base.min():.0f}, max h{int(base.idxmax())}={base.max():.0f})")
+    d = arb["dispatch"]
+    ch, dis = d[d["charge_mw"] > 1e-6], d[d["discharge_mw"] > 1e-6]
     print(f"Solar scenario    : +{assumptions['solar_growth_pct']:.0%} generation")
-    print(f"Charge hours      : {sorted(arb['charge_hours'])}  (pre-dawn, solar~0)")
-    print(f"Discharge hours   : {sorted(arb['discharge_hours'])}")
-    print(f"Avg charge price  : {arb['avg_charge_price_krw_per_mwh']:>12,.0f} KRW/MWh")
-    print(f"Avg discharge px  : {arb['avg_discharge_price_krw_per_mwh']:>12,.0f} KRW/MWh")
+    print(f"LP status         : {arb['status']}")
+    print(f"Charge hours      : {list(ch.index)}  ({ch['charge_mw'].sum():.1f} MWh drawn)")
+    print(f"Discharge hours   : {list(dis.index)}  ({dis['discharge_mw'].sum():.1f} MWh delivered)")
     print(f"Daily net revenue : {arb['net_revenue_krw']/KRW_PER_USD:>12,.0f} USD")
     print("-" * 64)
     irr = m["irr"]
@@ -88,7 +92,7 @@ def print_breakeven(assumptions: dict, result: dict) -> None:
     be_capex = breakeven_capex_per_kwh(daily, assumptions)
     mult = breakeven_daily_revenue_multiplier(daily, assumptions)
     stack = stacked_revenue_needed_per_kw_year(npv, assumptions)
-    print("\nBreak-even levers (what would make NPV = 0):")
+    print("\nBreak-even levers on the representative day (diagnostic only):")
     print(f"  Capex must fall to        : ${be_capex/KRW_PER_USD:>6,.0f}/kWh "
           f"(now ${assumptions['capex_per_kwh_krw']/KRW_PER_USD:,.0f})")
     print(f"  Daily arbitrage must be   : {mult:>6.1f} x  larger")
@@ -98,14 +102,21 @@ def print_breakeven(assumptions: dict, result: dict) -> None:
 
 def elasticity_scenarios(assumptions: dict, base_el: pd.Series,
                          solar: pd.Series) -> pd.DataFrame:
-    """Does the (contested) hourly elasticity pattern change the investment call?"""
+    """EXPLORATORY: NPV under alternative coefficient vectors at the scenario growth.
+
+    The 'x ratio' row rescales the NATIONAL hourly vector by the ratio of two
+    average coefficients and still applies it to the NATIONAL price. It is not a
+    Yeongnam causal effect and not a regional price (Korea has one SMP).
+    """
+    assumptions = dict(assumptions,
+                       solar_growth_pct=assumptions["exploratory_solar_growth_pct"])
     ratio = (assumptions["elasticity_zonal_yeongnam"]
              / assumptions["elasticity_iv_average"])
     active = solar >= assumptions["solar_active_threshold_mwh"]
     variants = {
         "as-estimated (national HTE)": base_el,
         "solar-hours only (night=0)": base_el.where(active, 0.0),
-        f"Yeongnam intensity (x{ratio:.1f})": base_el * ratio,
+        f"national HTE rescaled x{ratio:.1f} (exploratory)": base_el * ratio,
         "flat IV average (-0.0058)": pd.Series(assumptions["elasticity_iv_average"],
                                                index=base_el.index),
     }
@@ -130,22 +141,22 @@ def sensitivity(base_assumptions: dict, key: str, values: list) -> pd.DataFrame:
 
 
 def plot_price_curve(assumptions: dict, result: dict, solar: pd.Series) -> str:
-    price, arb = result["price"], result["arbitrage"]
+    price, d = result["price"], result["arbitrage"]["dispatch"]
+    charge_h = list(d.index[d["charge_mw"] > 1e-6])
+    discharge_h = list(d.index[d["discharge_mw"] > 1e-6])
     fig, ax = plt.subplots(figsize=(9, 4.5))
     ax2 = ax.twinx()
     ax2.bar(solar.index, solar.values, width=0.8, color="gold", alpha=0.35,
             label="solar generation")
     ax2.set_ylabel("Solar generation (MWh)")
     ax.plot(price.index, price["baseline_smp"], "--", color="tab:blue",
-            label="Baseline SMP (2024)")
-    ax.plot(price.index, price["scenario_smp"], "-", color="tab:blue",
-            label=f"+{assumptions['solar_growth_pct']:.0%} solar scenario")
-    ax.scatter(arb["charge_hours"], price.loc[arb["charge_hours"], "scenario_smp"],
-               color="tab:green", zorder=5, label="charge")
-    ax.scatter(arb["discharge_hours"], price.loc[arb["discharge_hours"], "scenario_smp"],
-               color="tab:red", zorder=5, label="discharge")
+            label="2024 hour-of-day mean SMP")
+    ax.scatter(charge_h, price.loc[charge_h, "scenario_smp"],
+               color="tab:green", zorder=5, label="LP charge")
+    ax.scatter(discharge_h, price.loc[discharge_h, "scenario_smp"],
+               color="tab:red", zorder=5, label="LP discharge")
     ax.set_xlabel("Hour of day"); ax.set_ylabel("SMP (KRW/kWh)")
-    ax.set_title("Korea 2024: SMP, solar, and BESS dispatch")
+    ax.set_title("Korea 2024 hour-of-day mean SMP, solar, and LP dispatch")
     ax.set_zorder(ax2.get_zorder() + 1); ax.patch.set_visible(False)
     ax.legend(loc="upper left"); ax2.legend(loc="upper right")
     path = os.path.join(OUT_DIR, "price_curve.png")
@@ -174,14 +185,15 @@ def main() -> None:
     print_summary(a, result)
     print_breakeven(a, result)
 
-    print("\nElasticity-scenario robustness (does the hourly pattern change the call?):")
+    print("\nEXPLORATORY elasticity scenarios at "
+          f"+{a['exploratory_solar_growth_pct']:.0%} solar generation (not a forecast):")
     print(elasticity_scenarios(a, base_el, solar).to_string(index=False))
 
-    print("\nSensitivity - solar growth:")
+    print("\nEXPLORATORY sensitivity - solar generation growth:")
     print(sensitivity(a, "solar_growth_pct", [0.0, 0.25, 0.50, 1.00])
           .to_string(index=False))
 
-    print("\nSensitivity - capex (KRW/kWh):")
+    print("\nSensitivity - capex (KRW/kWh), representative day:")
     print(sensitivity(a, "capex_per_kwh_krw", [150_000, 250_000, 350_000, 450_000])
           .to_string(index=False))
 

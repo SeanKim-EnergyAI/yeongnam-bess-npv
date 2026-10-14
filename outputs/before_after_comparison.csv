@@ -1,0 +1,6 @@
+case,analysis_period,days_used,dispatch_engine,price_basis,revenue_days_per_year,daily_net_usd,yr1_arbitrage_gross_margin_usd_m,yr1_om_usd_m,yr1_net_cashflow_usd_m,npv_usd_m,breakeven_capex_usd_per_kwh,stacked_revenue_needed_usd_per_kw_yr
+BEFORE: legacy headline (run_phase3 @ bb253a4),hour-of-day mean of 2024,1,heuristic (infeasible),+30% solar scenario (exploratory),350,7784,2.72,2.79,-0.06,-142.5,46.9,156.4
+BEFORE: legacy full-year (run_analytics @ bb253a4),2024-01-01..2024-12-31,366,heuristic (infeasible),"observed, incl. 2 partial dates",350,10691,3.74,2.79,0.96,-134.2,64.4,147.3
+AFTER: baseline,2024-01-02..2024-12-30,364,LP per day,"observed, complete days",350,9983,3.49,2.79,0.71,-136.2,60.1,149.5
+AFTER diag: actual-period sum as year-1,2024-01-02..2024-12-30,364,LP per day,"observed, complete days",364,9983,3.63,2.79,0.85,-135.1,62.5,148.3
+"AFTER diag: continuous SOC, per-day cap",2024-01-02..2024-12-30,364,LP whole period,"observed, complete days",350,10048,3.52,2.79,0.73,-136.0,60.5,149.3
